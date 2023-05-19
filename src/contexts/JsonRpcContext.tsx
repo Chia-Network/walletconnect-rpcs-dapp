@@ -1,16 +1,18 @@
 import { createContext, PropsWithChildren, useContext } from 'react';
 import { ChiaMethod } from '../constants/wallet-connect';
-import { GetNfts } from '../types/GetNfts';
-import { SignMessageById } from '../types/SignMessageById';
+import { GetNftInfo } from '../types/rpc/GetNftInfo';
+import { GetNfts } from '../types/rpc/GetNfts';
+import { SignMessageById } from '../types/rpc/SignMessageById';
 import { useWalletConnect } from './WalletConnectContext';
 
 interface JsonRpc {
     signMessageById: (message: string, id: string) => Promise<SignMessageById>;
     getNfts: (
-        walletId: number,
+        walletIds: number[],
         num: number,
         startIndex: number
     ) => Promise<GetNfts>;
+    getNftInfo: (coinId: string) => Promise<GetNftInfo>;
 }
 
 export const JsonRpcContext = createContext<JsonRpc>({} as JsonRpc);
@@ -23,9 +25,7 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
         if (!session) throw new Error('Session is not connected');
         if (!fingerprint) throw new Error('Fingerprint is not loaded.');
 
-        const result = await client!.request<
-            { data: T } | { error: { data: { error: string } } }
-        >({
+        const result = await client!.request<{ data: T } | { error: any }>({
             topic: session!.topic,
             chainId,
             request: {
@@ -34,7 +34,7 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
             },
         });
 
-        if ('error' in result) throw new Error(result.error.data.error);
+        if ('error' in result) throw new Error(JSON.stringify(result.error));
 
         return result.data;
     }
@@ -46,16 +46,26 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
         });
     }
 
-    async function getNfts(walletId: number, num: number, startIndex: number) {
+    async function getNfts(
+        walletIds: number[],
+        num: number,
+        startIndex: number
+    ) {
         return await request<GetNfts>(ChiaMethod.GetNfts, {
-            walletId,
+            walletIds,
             num,
             startIndex,
         });
     }
 
+    async function getNftInfo(coinId: string) {
+        return await request<GetNftInfo>(ChiaMethod.GetNftInfo, { coinId });
+    }
+
     return (
-        <JsonRpcContext.Provider value={{ signMessageById, getNfts }}>
+        <JsonRpcContext.Provider
+            value={{ signMessageById, getNfts, getNftInfo }}
+        >
             {children}
         </JsonRpcContext.Provider>
     );

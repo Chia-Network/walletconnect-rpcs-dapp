@@ -18,8 +18,8 @@ import { useJsonRpc } from './contexts/JsonRpcContext';
 import { useWalletConnect } from './contexts/WalletConnectContext';
 
 export default function Home() {
-    const { connect, session } = useWalletConnect();
-    const { signMessageById, getNfts } = useJsonRpc();
+    const { connect, disconnect, session } = useWalletConnect();
+    const { signMessageById, getNfts, getNftInfo } = useJsonRpc();
 
     const [command, setCommand] = useState(0);
     const [response, setResponse] = useState<any>(null);
@@ -29,13 +29,11 @@ export default function Home() {
     const [walletId, setWalletId] = useState(0);
     const [num, setNum] = useState(50);
     const [startIndex, setStartIndex] = useState(0);
+    const [coinId, setCoinId] = useState('');
 
     const commands = {
         chia_signMessageById: (
-            <Box sx={styles.command}>
-                <Typography variant='h5'>
-                    <code>chia_signMessageById</code>
-                </Typography>
+            <>
                 <TextField
                     fullWidth
                     label='Message'
@@ -65,14 +63,11 @@ export default function Home() {
                 >
                     Sign Message By Id
                 </Button>
-            </Box>
+            </>
         ),
 
         chia_getNFTs: (
-            <Box sx={styles.command}>
-                <Typography variant='h5'>
-                    <code>chia_getNFTs</code>
-                </Typography>
+            <>
                 <TextField
                     fullWidth
                     label='Wallet Id'
@@ -102,7 +97,7 @@ export default function Home() {
                     fullWidth
                     variant='contained'
                     onClick={() =>
-                        getNfts(walletId, num, startIndex)
+                        getNfts([walletId], num, startIndex)
                             .then((data) => setResponse(data))
                             .catch((error) => {
                                 console.error(error);
@@ -112,9 +107,38 @@ export default function Home() {
                 >
                     Get NFTs
                 </Button>
-            </Box>
+            </>
+        ),
+
+        chia_getNFTInfo: (
+            <>
+                <TextField
+                    fullWidth
+                    label='Coin Id'
+                    variant='outlined'
+                    sx={{ mt: 2 }}
+                    value={coinId}
+                    onChange={(e) => setCoinId(e.target.value)}
+                />
+                <Button
+                    fullWidth
+                    variant='contained'
+                    onClick={() =>
+                        getNftInfo(coinId)
+                            .then((data) => setResponse(data))
+                            .catch((error) => {
+                                console.error(error);
+                                setResponse({ error: error.message });
+                            })
+                    }
+                >
+                    Get NFT Info
+                </Button>
+            </>
         ),
     };
+
+    const commandEntry = Object.entries(commands)[command];
 
     return (
         <Box sx={styles.container}>
@@ -149,7 +173,7 @@ export default function Home() {
                 </>
             ) : (
                 <>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth sx={{ mt: 2 }}>
                         <InputLabel id='command-select-label'>
                             Command
                         </InputLabel>
@@ -172,14 +196,37 @@ export default function Home() {
 
                     <Divider sx={{ mt: 4 }} />
 
-                    <Box mt={3}>{Object.values(commands)[command]}</Box>
+                    <Box sx={styles.command} mt={3}>
+                        <Typography variant='h5'>
+                            <code>{commandEntry[0]}</code>
+                        </Typography>
+                        {commandEntry[1]}
+                        <Button
+                            fullWidth
+                            variant='outlined'
+                            color='error'
+                            onClick={() => disconnect()}
+                        >
+                            Unlink Wallet
+                        </Button>
+
+                        <Button
+                            fullWidth
+                            variant='outlined'
+                            color='error'
+                            onClick={() => {
+                                localStorage.clear();
+                                window.location.href = '';
+                            }}
+                        >
+                            Clear Local Storage
+                        </Button>
+                    </Box>
 
                     <Divider sx={{ mt: 4 }} />
 
                     <Box sx={styles.response} mt={3}>
-                        <Typography variant='h5'>
-                            <code>Response</code>
-                        </Typography>
+                        <Typography variant='h5'>Response</Typography>
 
                         <SyntaxHighlighter
                             customStyle={{
@@ -203,7 +250,7 @@ export default function Home() {
 
 const styles: Record<string, SxProps> = {
     container: {
-        paddingTop: '80px',
+        paddingTop: '60px',
         width: { xs: '340px', md: '460px', lg: '540px' },
         marginLeft: 'auto',
         marginRight: 'auto',

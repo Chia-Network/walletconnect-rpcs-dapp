@@ -38,7 +38,7 @@ export enum ChiaMethod {
 
 export const REQUIRED_NAMESPACES: ProposalTypes.RequiredNamespaces = {
     chia: {
-        methods: [ChiaMethod.SignMessageById, ChiaMethod.GetNfts],
+        methods: Object.values(ChiaMethod),
         chains: [CHAIN_ID],
         events: [],
     },
