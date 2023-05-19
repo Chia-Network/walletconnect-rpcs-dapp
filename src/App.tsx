@@ -1,5 +1,6 @@
 import {
     Button,
+    ButtonGroup,
     Divider,
     FormControl,
     InputLabel,
@@ -31,6 +32,15 @@ export default function Home() {
     const [startIndex, setStartIndex] = useState(0);
     const [coinId, setCoinId] = useState('');
 
+    function handle(promise: Promise<any>) {
+        promise
+            .then((data) => setResponse(data))
+            .catch((error) => {
+                console.error(error);
+                setResponse({ error: error.message });
+            });
+    }
+
     const commands = {
         chia_signMessageById: (
             <>
@@ -38,7 +48,6 @@ export default function Home() {
                     fullWidth
                     label='Message'
                     variant='outlined'
-                    sx={{ mt: 2 }}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                 />
@@ -52,14 +61,7 @@ export default function Home() {
                 <Button
                     fullWidth
                     variant='contained'
-                    onClick={() =>
-                        signMessageById(message, did)
-                            .then((data) => setResponse(data))
-                            .catch((error) => {
-                                console.error(error);
-                                setResponse({ error: error.message });
-                            })
-                    }
+                    onClick={() => handle(signMessageById(message, did))}
                 >
                     Sign Message By Id
                 </Button>
@@ -73,7 +75,6 @@ export default function Home() {
                     label='Wallet Id'
                     variant='outlined'
                     type='number'
-                    sx={{ mt: 2 }}
                     value={walletId}
                     onChange={(e) => setWalletId(+e.target.value)}
                 />
@@ -96,14 +97,7 @@ export default function Home() {
                 <Button
                     fullWidth
                     variant='contained'
-                    onClick={() =>
-                        getNfts([walletId], num, startIndex)
-                            .then((data) => setResponse(data))
-                            .catch((error) => {
-                                console.error(error);
-                                setResponse({ error: error.message });
-                            })
-                    }
+                    onClick={() => handle(getNfts([walletId], num, startIndex))}
                 >
                     Get NFTs
                 </Button>
@@ -116,21 +110,13 @@ export default function Home() {
                     fullWidth
                     label='Coin Id'
                     variant='outlined'
-                    sx={{ mt: 2 }}
                     value={coinId}
                     onChange={(e) => setCoinId(e.target.value)}
                 />
                 <Button
                     fullWidth
                     variant='contained'
-                    onClick={() =>
-                        getNftInfo(coinId)
-                            .then((data) => setResponse(data))
-                            .catch((error) => {
-                                console.error(error);
-                                setResponse({ error: error.message });
-                            })
-                    }
+                    onClick={() => handle(getNftInfo(coinId))}
                 >
                     Get NFT Info
                 </Button>
@@ -197,30 +183,33 @@ export default function Home() {
                     <Divider sx={{ mt: 4 }} />
 
                     <Box sx={styles.command} mt={3}>
-                        <Typography variant='h5'>
+                        <Typography variant='h5' mb={2}>
                             <code>{commandEntry[0]}</code>
                         </Typography>
                         {commandEntry[1]}
-                        <Button
-                            fullWidth
-                            variant='outlined'
-                            color='error'
-                            onClick={() => disconnect()}
-                        >
-                            Unlink Wallet
-                        </Button>
 
-                        <Button
-                            fullWidth
-                            variant='outlined'
-                            color='error'
-                            onClick={() => {
-                                localStorage.clear();
-                                window.location.href = '';
-                            }}
-                        >
-                            Clear Local Storage
-                        </Button>
+                        <ButtonGroup variant='outlined'>
+                            <Button
+                                fullWidth
+                                variant='outlined'
+                                color='error'
+                                onClick={() => disconnect()}
+                            >
+                                Unlink Wallet
+                            </Button>
+
+                            <Button
+                                fullWidth
+                                variant='outlined'
+                                color='error'
+                                onClick={() => {
+                                    localStorage.clear();
+                                    window.location.href = '';
+                                }}
+                            >
+                                Reset Storage
+                            </Button>
+                        </ButtonGroup>
                     </Box>
 
                     <Divider sx={{ mt: 4 }} />
