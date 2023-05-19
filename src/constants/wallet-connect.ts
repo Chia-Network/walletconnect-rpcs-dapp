@@ -45,8 +45,8 @@ export const REQUIRED_NAMESPACES: ProposalTypes.RequiredNamespaces = {
 };
 
 export const METADATA: CoreTypes.Metadata = {
-    name: 'ChiaTCG Submission',
-    description: 'An app for submitting NFTs to ChiaTCG.',
+    name: 'Test App',
+    description: 'A test application for WalletConnect.',
     url: '#',
     icons: ['https://walletconnect.com/walletconnect-logo.png'],
 };
