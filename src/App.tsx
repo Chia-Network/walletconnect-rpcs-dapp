@@ -19,7 +19,8 @@ import { useJsonRpc } from './contexts/JsonRpcContext';
 import { useWalletConnect } from './contexts/WalletConnectContext';
 
 export default function Home() {
-    const { connect, disconnect, session } = useWalletConnect();
+    const { client, session, pairings, connect, disconnect } =
+        useWalletConnect();
     const { signMessageById, getNfts, getNftInfo } = useJsonRpc();
 
     const [command, setCommand] = useState(0);
@@ -31,6 +32,13 @@ export default function Home() {
     const [num, setNum] = useState(50);
     const [startIndex, setStartIndex] = useState(0);
     const [coinId, setCoinId] = useState('');
+
+    const onConnect = () => {
+        if (!client) throw new Error('WalletConnect is not initialized.');
+
+        if (pairings.length) console.log('Pairing Modal TODO', pairings);
+        else connect();
+    };
 
     function handle(promise: Promise<any>) {
         promise
@@ -151,7 +159,7 @@ export default function Home() {
                     <Button
                         fullWidth
                         variant='contained'
-                        onClick={() => connect()}
+                        onClick={onConnect}
                         sx={{ mt: 3 }}
                     >
                         Link Wallet

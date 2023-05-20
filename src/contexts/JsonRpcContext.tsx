@@ -74,11 +74,10 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
 export function useJsonRpc() {
     const context = useContext(JsonRpcContext);
 
-    if (context === undefined) {
+    if (!context)
         throw new Error(
-            'useJsonRpc must be used within a JsonRpcContextProvider'
+            'Calls to `useJsonRpc` must be used within a `JsonRpcProvider`.'
         );
-    }
 
     return context;
 }

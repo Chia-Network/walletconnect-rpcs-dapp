@@ -68,13 +68,8 @@ export function WalletConnectProvider({
 
     const connect = useCallback(
         async (pairing: any) => {
-            if (!client) {
-                throw new Error('WalletConnect is not initialized');
-            }
-
-            if (!web3Modal) {
-                throw new Error('Web3Modal is not initialized');
-            }
+            if (!client) throw new Error('WalletConnect is not initialized');
+            if (!web3Modal) throw new Error('Web3Modal is not initialized');
 
             try {
                 const { uri, approval } = await client.connect({
@@ -100,13 +95,8 @@ export function WalletConnectProvider({
     );
 
     const disconnect = useCallback(async () => {
-        if (!client) {
-            throw new Error('WalletConnect is not initialized');
-        }
-
-        if (!session) {
-            throw new Error('Session is not connected');
-        }
+        if (!client) throw new Error('WalletConnect is not initialized');
+        if (!session) throw new Error('Session is not connected');
 
         await client.disconnect({
             topic: session.topic,
@@ -118,9 +108,7 @@ export function WalletConnectProvider({
 
     const subscribeToEvents = useCallback(
         async (client: Client) => {
-            if (!client) {
-                throw new Error('WalletConnect is not initialized');
-            }
+            if (!client) throw new Error('WalletConnect is not initialized');
 
             client.on('session_update', ({ topic, params }) => {
                 const { namespaces } = params;
@@ -129,18 +117,17 @@ export function WalletConnectProvider({
                 onSessionConnected(updatedSession);
             });
 
-            client.on('session_delete', () => {
-                reset();
-            });
+            client.on('session_delete', () => reset());
+
+            // Debug
+            client.on('session_event', (...args) => console.log(args));
         },
         [onSessionConnected]
     );
 
     const checkPersistedState = useCallback(
         async (client: Client) => {
-            if (!client) {
-                throw new Error('WalletConnect is not initialized.');
-            }
+            if (!client) throw new Error('WalletConnect is not initialized.');
 
             setPairings(client.pairing.getAll({ active: true }));
 
@@ -170,30 +157,25 @@ export function WalletConnectProvider({
                 metadata: METADATA,
             });
 
-            setClient(client);
-
             const web3Modal = new Web3Modal({
                 projectId,
                 standaloneChains: [chainId],
                 walletConnectVersion: 2,
             });
 
+            setClient(client);
             setWeb3Modal(web3Modal);
 
             await subscribeToEvents(client);
             await checkPersistedState(client);
-        } catch (err) {
-            throw err;
         } finally {
             setIsInitializing(false);
         }
     }, [checkPersistedState, subscribeToEvents]);
 
     useEffect(() => {
-        if (!client) {
-            createClient();
-        }
-    }, [createClient]);
+        if (!client) createClient();
+    }, [client, createClient]);
 
     const value = useMemo(
         () => ({
@@ -235,11 +217,10 @@ export function WalletConnectProvider({
 export function useWalletConnect() {
     const context = useContext(WalletConnectContext);
 
-    if (!context) {
+    if (!context)
         throw new Error(
-            'useWalletConnectClient must be used within a WalletConnectContext provider'
+            'Calls to `useWalletConnect` must be used within a `WalletConnectProvider`.'
         );
-    }
 
     return context;
 }
