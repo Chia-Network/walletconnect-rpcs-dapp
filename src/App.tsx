@@ -1,8 +1,11 @@
 import {
     Button,
     ButtonGroup,
+    Checkbox,
     Divider,
     FormControl,
+    FormControlLabel,
+    FormGroup,
     InputLabel,
     Link,
     MenuItem,
@@ -21,17 +24,37 @@ import { useWalletConnect } from './contexts/WalletConnectContext';
 export default function Home() {
     const { client, session, pairings, connect, disconnect } =
         useWalletConnect();
-    const { signMessageById, getNfts, getNftInfo } = useJsonRpc();
+    const {
+        // Wallet
+        logIn,
+        getWallets,
+        getTransaction,
+        getWalletBalance,
+
+        // DID
+        signMessageById,
+
+        // NFT
+        getNfts,
+        getNftInfo,
+    } = useJsonRpc();
 
     const [command, setCommand] = useState(0);
     const [response, setResponse] = useState<any>(null);
 
+    const [fingerprint, setFingerprint] = useState(0);
+
     const [message, setMessage] = useState('');
     const [did, setDid] = useState('');
+
     const [walletId, setWalletId] = useState(0);
+    const [transactionId, setTransactionId] = useState('');
+    const [coinId, setCoinId] = useState('');
+
     const [number, setNumber] = useState(50);
     const [startIndex, setStartIndex] = useState(0);
-    const [coinId, setCoinId] = useState('');
+
+    const [includeData, setIncludeData] = useState(false);
 
     const onConnect = () => {
         if (!client) throw new Error('WalletConnect is not initialized.');
@@ -42,7 +65,10 @@ export default function Home() {
 
     function handle(promise: Promise<any>) {
         promise
-            .then((data) => setResponse(data))
+            .then((data) => {
+                console.log(data);
+                setResponse(data);
+            })
             .catch((error) => {
                 console.error(error);
                 setResponse({ error: error.message });
@@ -78,6 +104,24 @@ export default function Home() {
         />
     );
 
+    const booleanOption = (
+        name: string,
+        value: boolean,
+        setValue: React.Dispatch<React.SetStateAction<boolean>>
+    ) => (
+        <FormGroup>
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={value}
+                        onChange={(e) => setValue(e.target.checked)}
+                    />
+                }
+                label={name}
+            />
+        </FormGroup>
+    );
+
     const requestButton = (name: string, request: () => Promise<any>) => (
         <Button fullWidth variant='contained' onClick={() => handle(request())}>
             {name}
@@ -85,6 +129,29 @@ export default function Home() {
     );
 
     const commands = {
+        // Wallet
+        chia_logIn: [
+            numberOption('Fingerprint', fingerprint, setFingerprint),
+            requestButton('Log In', () => logIn({ fingerprint })),
+        ],
+        chia_getWallets: [
+            booleanOption('Include Data', includeData, setIncludeData),
+            requestButton('Get Wallets', () => getWallets({ includeData })),
+        ],
+        chia_getTransaction: [
+            stringOption('Transaction Id', transactionId, setTransactionId),
+            requestButton('Get Transaction', () =>
+                getTransaction({ transactionId })
+            ),
+        ],
+        chia_getWalletBalance: [
+            numberOption('Wallet Id', walletId, setWalletId),
+            requestButton('Get Wallet Balance', () =>
+                getWalletBalance({ walletId })
+            ),
+        ],
+
+        // DID
         chia_signMessageById: [
             stringOption('Message', message, setMessage),
             stringOption('DID', did, setDid),
@@ -92,6 +159,8 @@ export default function Home() {
                 signMessageById({ message, id: did })
             ),
         ],
+
+        // NFT
         chia_getNFTs: [
             numberOption('Wallet Id', walletId, setWalletId),
             numberOption('Number', number, setNumber),

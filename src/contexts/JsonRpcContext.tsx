@@ -3,15 +3,38 @@ import { ChiaMethod } from '../constants/wallet-connect';
 import { GetNftInfoRequest, GetNftInfoResponse } from '../types/rpc/GetNftInfo';
 import { GetNftsRequest, GetNftsResponse } from '../types/rpc/GetNfts';
 import {
+    GetTransactionRequest,
+    GetTransactionResponse,
+} from '../types/rpc/GetTransaction';
+import {
+    GetWalletBalanceRequest,
+    GetWalletBalanceResponse,
+} from '../types/rpc/GetWalletBalance';
+import { GetWalletsRequest, GetWalletsResponse } from '../types/rpc/GetWallets';
+import { LogInRequest, LogInResponse } from '../types/rpc/LogIn';
+import {
     SignMessageByIdRequest,
     SignMessageByIdResponse,
 } from '../types/rpc/SignMessageById';
 import { useWalletConnect } from './WalletConnectContext';
 
 interface JsonRpc {
+    // Wallet
+    logIn: (data: LogInRequest) => Promise<LogInResponse>;
+    getWallets: (data: GetWalletsRequest) => Promise<GetWalletsResponse>;
+    getTransaction: (
+        data: GetTransactionRequest
+    ) => Promise<GetTransactionResponse>;
+    getWalletBalance: (
+        data: GetWalletBalanceRequest
+    ) => Promise<GetWalletBalanceResponse>;
+
+    // DID
     signMessageById: (
         data: SignMessageByIdRequest
     ) => Promise<SignMessageByIdResponse>;
+
+    // NFT
     getNfts: (data: GetNftsRequest) => Promise<GetNftsResponse>;
     getNftInfo: (data: GetNftInfoRequest) => Promise<GetNftInfoResponse>;
 }
@@ -40,6 +63,30 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
         return result.data;
     }
 
+    // Wallet
+    async function logIn(data: LogInRequest) {
+        return await request<LogInResponse>(ChiaMethod.LogIn, data);
+    }
+
+    async function getWallets(data: GetWalletsRequest) {
+        return await request<GetWalletsResponse>(ChiaMethod.GetWallets, data);
+    }
+
+    async function getTransaction(data: GetTransactionRequest) {
+        return await request<GetTransactionResponse>(
+            ChiaMethod.GetTransaction,
+            data
+        );
+    }
+
+    async function getWalletBalance(data: GetWalletBalanceRequest) {
+        return await request<GetWalletBalanceResponse>(
+            ChiaMethod.GetWalletBalance,
+            data
+        );
+    }
+
+    // DID
     async function signMessageById(data: SignMessageByIdRequest) {
         return await request<SignMessageByIdResponse>(
             ChiaMethod.SignMessageById,
@@ -47,6 +94,7 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
         );
     }
 
+    // NFT
     async function getNfts(data: GetNftsRequest) {
         return await request<GetNftsResponse>(ChiaMethod.GetNfts, data);
     }
@@ -57,7 +105,20 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
 
     return (
         <JsonRpcContext.Provider
-            value={{ signMessageById, getNfts, getNftInfo }}
+            value={{
+                // Wallet
+                logIn,
+                getWallets,
+                getTransaction,
+                getWalletBalance,
+
+                // DID
+                signMessageById,
+
+                // NFT
+                getNfts,
+                getNftInfo,
+            }}
         >
             {children}
         </JsonRpcContext.Provider>
