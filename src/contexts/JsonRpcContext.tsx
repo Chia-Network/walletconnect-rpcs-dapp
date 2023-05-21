@@ -1,18 +1,19 @@
 import { createContext, PropsWithChildren, useContext } from 'react';
 import { ChiaMethod } from '../constants/wallet-connect';
-import { GetNftInfo } from '../types/rpc/GetNftInfo';
-import { GetNfts } from '../types/rpc/GetNfts';
-import { SignMessageById } from '../types/rpc/SignMessageById';
+import { GetNftInfoRequest, GetNftInfoResponse } from '../types/rpc/GetNftInfo';
+import { GetNftsRequest, GetNftsResponse } from '../types/rpc/GetNfts';
+import {
+    SignMessageByIdRequest,
+    SignMessageByIdResponse,
+} from '../types/rpc/SignMessageById';
 import { useWalletConnect } from './WalletConnectContext';
 
 interface JsonRpc {
-    signMessageById: (message: string, id: string) => Promise<SignMessageById>;
-    getNfts: (
-        walletIds: number[],
-        num: number,
-        startIndex: number
-    ) => Promise<GetNfts>;
-    getNftInfo: (coinId: string) => Promise<GetNftInfo>;
+    signMessageById: (
+        data: SignMessageByIdRequest
+    ) => Promise<SignMessageByIdResponse>;
+    getNfts: (data: GetNftsRequest) => Promise<GetNftsResponse>;
+    getNftInfo: (data: GetNftInfoRequest) => Promise<GetNftInfoResponse>;
 }
 
 export const JsonRpcContext = createContext<JsonRpc>({} as JsonRpc);
@@ -39,27 +40,19 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
         return result.data;
     }
 
-    async function signMessageById(message: string, id: string) {
-        return await request<SignMessageById>(ChiaMethod.SignMessageById, {
-            message,
-            id,
-        });
+    async function signMessageById(data: SignMessageByIdRequest) {
+        return await request<SignMessageByIdResponse>(
+            ChiaMethod.SignMessageById,
+            data
+        );
     }
 
-    async function getNfts(
-        walletIds: number[],
-        num: number,
-        startIndex: number
-    ) {
-        return await request<GetNfts>(ChiaMethod.GetNfts, {
-            walletIds,
-            num,
-            startIndex,
-        });
+    async function getNfts(data: GetNftsRequest) {
+        return await request<GetNftsResponse>(ChiaMethod.GetNfts, data);
     }
 
-    async function getNftInfo(coinId: string) {
-        return await request<GetNftInfo>(ChiaMethod.GetNftInfo, { coinId });
+    async function getNftInfo(data: GetNftInfoRequest) {
+        return await request<GetNftInfoResponse>(ChiaMethod.GetNftInfo, data);
     }
 
     return (

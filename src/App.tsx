@@ -12,7 +12,7 @@ import {
     Typography,
 } from '@mui/material';
 import { Box } from '@mui/system';
-import { useState } from 'react';
+import { cloneElement, useState } from 'react';
 import { LightAsync as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { github } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { useJsonRpc } from './contexts/JsonRpcContext';
@@ -29,7 +29,7 @@ export default function Home() {
     const [message, setMessage] = useState('');
     const [did, setDid] = useState('');
     const [walletId, setWalletId] = useState(0);
-    const [num, setNum] = useState(50);
+    const [number, setNumber] = useState(50);
     const [startIndex, setStartIndex] = useState(0);
     const [coinId, setCoinId] = useState('');
 
@@ -49,87 +49,61 @@ export default function Home() {
             });
     }
 
+    const stringOption = (
+        name: string,
+        value: string,
+        setValue: React.Dispatch<React.SetStateAction<string>>
+    ) => (
+        <TextField
+            fullWidth
+            label={name}
+            variant='outlined'
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+        />
+    );
+
+    const numberOption = (
+        name: string,
+        value: number,
+        setValue: React.Dispatch<React.SetStateAction<number>>
+    ) => (
+        <TextField
+            fullWidth
+            type='number'
+            label={name}
+            variant='outlined'
+            value={value}
+            onChange={(e) => setValue(+e.target.value)}
+        />
+    );
+
+    const requestButton = (name: string, request: () => Promise<any>) => (
+        <Button fullWidth variant='contained' onClick={() => handle(request())}>
+            {name}
+        </Button>
+    );
+
     const commands = {
-        chia_signMessageById: (
-            <>
-                <TextField
-                    fullWidth
-                    label='Message'
-                    variant='outlined'
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                />
-                <TextField
-                    fullWidth
-                    label='DID'
-                    variant='outlined'
-                    value={did}
-                    onChange={(e) => setDid(e.target.value)}
-                />
-                <Button
-                    fullWidth
-                    variant='contained'
-                    onClick={() => handle(signMessageById(message, did))}
-                >
-                    Sign Message By Id
-                </Button>
-            </>
-        ),
-
-        chia_getNFTs: (
-            <>
-                <TextField
-                    fullWidth
-                    label='Wallet Id'
-                    variant='outlined'
-                    type='number'
-                    value={walletId}
-                    onChange={(e) => setWalletId(+e.target.value)}
-                />
-                <TextField
-                    fullWidth
-                    label='Num'
-                    variant='outlined'
-                    type='number'
-                    value={num}
-                    onChange={(e) => setNum(+e.target.value)}
-                />
-                <TextField
-                    fullWidth
-                    label='Start Index'
-                    variant='outlined'
-                    type='number'
-                    value={startIndex}
-                    onChange={(e) => setStartIndex(+e.target.value)}
-                />
-                <Button
-                    fullWidth
-                    variant='contained'
-                    onClick={() => handle(getNfts([walletId], num, startIndex))}
-                >
-                    Get NFTs
-                </Button>
-            </>
-        ),
-
-        chia_getNFTInfo: (
-            <>
-                <TextField
-                    fullWidth
-                    label='Coin Id'
-                    variant='outlined'
-                    value={coinId}
-                    onChange={(e) => setCoinId(e.target.value)}
-                />
-                <Button
-                    fullWidth
-                    variant='contained'
-                    onClick={() => handle(getNftInfo(coinId))}
-                >
-                    Get NFT Info
-                </Button>
-            </>
-        ),
+        chia_signMessageById: [
+            stringOption('Message', message, setMessage),
+            stringOption('DID', did, setDid),
+            requestButton('Sign Message By Id', () =>
+                signMessageById({ message, id: did })
+            ),
+        ],
+        chia_getNFTs: [
+            numberOption('Wallet Id', walletId, setWalletId),
+            numberOption('Number', number, setNumber),
+            numberOption('Start Index', startIndex, setStartIndex),
+            requestButton('Get NFTs', () =>
+                getNfts({ walletIds: [walletId], num: number, startIndex })
+            ),
+        ],
+        chia_getNFTInfo: [
+            stringOption('Coin Id', coinId, setCoinId),
+            requestButton('Get NFT Info', () => getNftInfo({ coinId })),
+        ],
     };
 
     const commandEntry = Object.entries(commands)[command];
@@ -194,7 +168,10 @@ export default function Home() {
                         <Typography variant='h5' mb={2}>
                             <code>{commandEntry[0]}</code>
                         </Typography>
-                        {commandEntry[1]}
+
+                        {commandEntry[1].map((element, i) =>
+                            cloneElement(element, { key: i })
+                        )}
 
                         <ButtonGroup variant='outlined'>
                             <Button
