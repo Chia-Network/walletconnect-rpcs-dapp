@@ -30,6 +30,7 @@ export default function Home() {
         getWallets,
         getTransaction,
         getWalletBalance,
+        getCurrentAddress,
 
         // DID
         signMessageById,
@@ -37,6 +38,7 @@ export default function Home() {
         // NFT
         getNfts,
         getNftInfo,
+        transferNft,
     } = useJsonRpc();
 
     const [command, setCommand] = useState(0);
@@ -50,6 +52,11 @@ export default function Home() {
     const [walletId, setWalletId] = useState(0);
     const [transactionId, setTransactionId] = useState('');
     const [coinId, setCoinId] = useState('');
+    const [nftCoinIds, setNftCoinIds] = useState('');
+
+    const [targetAddress, setTargetAddress] = useState('');
+
+    const [fee, setFee] = useState(0);
 
     const [number, setNumber] = useState(50);
     const [startIndex, setStartIndex] = useState(0);
@@ -150,6 +157,12 @@ export default function Home() {
                 getWalletBalance({ walletId })
             ),
         ],
+        chia_getCurrentAddress: [
+            numberOption('Wallet Id', walletId, setWalletId),
+            requestButton('Get Current Address', () =>
+                getCurrentAddress({ walletId })
+            ),
+        ],
 
         // DID
         chia_signMessageById: [
@@ -172,6 +185,20 @@ export default function Home() {
         chia_getNFTInfo: [
             stringOption('Coin Id', coinId, setCoinId),
             requestButton('Get NFT Info', () => getNftInfo({ coinId })),
+        ],
+        chia_transferNft: [
+            numberOption('Wallet Id', walletId, setWalletId),
+            stringOption('NFT Coin Ids', nftCoinIds, setNftCoinIds),
+            stringOption('Target Address', targetAddress, setTargetAddress),
+            numberOption('Fee', fee, setFee),
+            requestButton('Transfer NFT', () =>
+                transferNft({
+                    walletId,
+                    nftCoinIds: nftCoinIds.split(',').map((id) => id.trim()),
+                    targetAddress,
+                    fee,
+                })
+            ),
         ],
     };
 
