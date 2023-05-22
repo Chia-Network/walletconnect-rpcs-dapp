@@ -25,6 +25,10 @@ import {
     SendTransactionResponse,
 } from '../types/rpc/SendTransaction';
 import {
+    SignMessageByAddressRequest,
+    SignMessageByAddressResponse,
+} from '../types/rpc/SignMessageByAddress';
+import {
     SignMessageByIdRequest,
     SignMessageByIdResponse,
 } from '../types/rpc/SignMessageById';
@@ -32,6 +36,10 @@ import {
     TransferNftRequest,
     TransferNftResponse,
 } from '../types/rpc/TransferNft';
+import {
+    VerifySignatureRequest,
+    VerifySignatureResponse,
+} from '../types/rpc/VerifySignature';
 import { useWalletConnect } from './WalletConnectContext';
 
 interface JsonRpc {
@@ -50,6 +58,12 @@ interface JsonRpc {
     sendTransaction: (
         data: SendTransactionRequest
     ) => Promise<SendTransactionResponse>;
+    signMessageByAddress: (
+        data: SignMessageByAddressRequest
+    ) => Promise<SignMessageByAddressResponse>;
+    verifySignature: (
+        data: VerifySignatureRequest
+    ) => Promise<VerifySignatureResponse>;
 
     // DID
     signMessageById: (
@@ -124,6 +138,20 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
         );
     }
 
+    async function signMessageByAddress(data: SignMessageByAddressRequest) {
+        return await request<SignMessageByAddressResponse>(
+            ChiaMethod.SignMessageByAddress,
+            data
+        );
+    }
+
+    async function verifySignature(data: VerifySignatureRequest) {
+        return await request<VerifySignatureResponse>(
+            ChiaMethod.VerifySignature,
+            data
+        );
+    }
+
     // DID
     async function signMessageById(data: SignMessageByIdRequest) {
         return await request<SignMessageByIdResponse>(
@@ -162,6 +190,8 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
                 getWalletBalance,
                 getCurrentAddress,
                 sendTransaction,
+                signMessageByAddress,
+                verifySignature,
 
                 // DID
                 signMessageById,

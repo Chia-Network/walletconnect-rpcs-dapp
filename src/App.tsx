@@ -32,6 +32,8 @@ export default function Home() {
         getWalletBalance,
         getCurrentAddress,
         sendTransaction,
+        signMessageByAddress,
+        verifySignature,
 
         // DID
         signMessageById,
@@ -50,6 +52,9 @@ export default function Home() {
 
     const [message, setMessage] = useState('');
     const [did, setDid] = useState('');
+    const [publicKey, setPublicKey] = useState('');
+    const [signature, setSignature] = useState('');
+    const [signingMode, setSigningMode] = useState('');
 
     const [walletId, setWalletId] = useState(0);
     const [transactionId, setTransactionId] = useState('');
@@ -194,6 +199,29 @@ export default function Home() {
                 })
             ),
         ],
+        chia_signMessageByAddress: [
+            stringOption('Message', message, setMessage),
+            stringOption('Address', address, setAddress),
+            requestButton('Sign Message By Address', () =>
+                signMessageByAddress({ message, address: address })
+            ),
+        ],
+        chia_verifySignature: [
+            stringOption('Message', message, setMessage),
+            stringOption('Public Key', publicKey, setPublicKey),
+            stringOption('Signature', signature, setSignature),
+            stringOption('Address', address, setAddress),
+            stringOption('Signing Mode', signingMode, setSigningMode),
+            requestButton('Verify Signature', () =>
+                verifySignature({
+                    message,
+                    pubkey: publicKey,
+                    signature,
+                    address: address || undefined,
+                    signingMode: signingMode || undefined,
+                })
+            ),
+        ],
 
         // DID
         chia_signMessageById: [
@@ -221,7 +249,7 @@ export default function Home() {
             numberOption('Wallet Id', walletId, setWalletId),
             stringOption('Coin Id', coinId, setCoinId),
             stringOption('Launcher Id', launcherId, setLauncherId),
-            stringOption('Target Address', address, setAddress),
+            stringOption('Address', address, setAddress),
             numberOption('Fee', fee, setFee),
             requestButton('Transfer NFT', () =>
                 transferNft({
