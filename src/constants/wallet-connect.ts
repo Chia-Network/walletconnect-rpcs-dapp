@@ -34,6 +34,7 @@ export enum ChiaMethod {
     CreateNewDidWallet = 'chia_createNewDIDWallet',
     SetDidName = 'chia_setDIDName',
     SetNftDid = 'chia_setNFTDID',
+    GetNftWalletsWithDids = 'chia_getNFTWalletsWithDIDs',
 }
 
 export const REQUIRED_NAMESPACES: ProposalTypes.RequiredNamespaces = {

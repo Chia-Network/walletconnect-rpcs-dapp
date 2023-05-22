@@ -1,12 +1,12 @@
 import { Transaction } from '../Transaction';
 
 export interface SendTransactionRequest {
-    walletId: number;
     amount: number;
     fee: number;
     address: string;
-    memos?: string[];
+    walletId?: number;
     waitForConfirmation?: boolean;
+    memos?: string[]; // untested
 }
 
 export interface SendTransactionResponse {

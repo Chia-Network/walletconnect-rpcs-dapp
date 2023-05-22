@@ -1,15 +1,79 @@
 import { createContext, PropsWithChildren, useContext } from 'react';
 import { ChiaMethod } from '../constants/wallet-connect';
 import {
+    AddCatTokenRequest,
+    AddCatTokenResponse,
+} from '../types/rpc/AddCatToken';
+import {
+    CancelOfferRequest,
+    CancelOfferResponse,
+} from '../types/rpc/CancelOffer';
+import {
+    CheckOfferValidityRequest,
+    CheckOfferValidityResponse,
+} from '../types/rpc/CheckOfferValidity';
+import {
+    CreateNewCatWalletRequest,
+    CreateNewCatWalletResponse,
+} from '../types/rpc/CreateNewCatWallet';
+import {
+    CreateNewDidWalletRequest,
+    CreateNewDidWalletResponse,
+} from '../types/rpc/CreateNewDidWallet';
+import {
+    CreateOfferForIdsRequest,
+    CreateOfferForIdsResponse,
+} from '../types/rpc/CreateOfferForIds';
+import {
+    GetAllOffersRequest,
+    GetAllOffersResponse,
+} from '../types/rpc/GetAllOffers';
+import {
+    GetCatAssetIdRequest,
+    GetCatAssetIdResponse,
+} from '../types/rpc/GetCatAssetId';
+import {
+    GetCatWalletInfoRequest,
+    GetCatWalletInfoResponse,
+} from '../types/rpc/GetCatWalletInfo';
+import {
     GetCurrentAddressRequest,
     GetCurrentAddressResponse,
 } from '../types/rpc/GetCurrentAddress';
+import {
+    GetNextAddressRequest,
+    GetNextAddressResponse,
+} from '../types/rpc/GetNextAddress';
 import { GetNftInfoRequest, GetNftInfoResponse } from '../types/rpc/GetNftInfo';
 import { GetNftsRequest, GetNftsResponse } from '../types/rpc/GetNfts';
 import {
     GetNftsCountRequest,
     GetNftsCountResponse,
 } from '../types/rpc/GetNftsCount';
+import {
+    GetNftWalletsWithDidsRequest,
+    GetNftWalletsWithDidsResponse,
+} from '../types/rpc/GetNftWalletsWithDids';
+import {
+    GetOfferDataRequest,
+    GetOfferDataResponse,
+} from '../types/rpc/GetOfferData';
+import {
+    GetOfferRecordRequest,
+    GetOfferRecordResponse,
+} from '../types/rpc/GetOfferRecord';
+import {
+    GetOffersCountRequest,
+    GetOffersCountResponse,
+} from '../types/rpc/GetOffersCount';
+import {
+    GetOfferSummaryRequest,
+    GetOfferSummaryResponse,
+} from '../types/rpc/GetOfferSummary';
+import {
+    GetSyncStatusRequest,
+    GetSyncStatusResponse,
+} from '../types/rpc/GetSyncStatus';
 import {
     GetTransactionRequest,
     GetTransactionResponse,
@@ -24,6 +88,8 @@ import {
     SendTransactionRequest,
     SendTransactionResponse,
 } from '../types/rpc/SendTransaction';
+import { SetDidNameRequest, SetDidNameResponse } from '../types/rpc/SetDidName';
+import { SetNftDidRequest, SetNftDidResponse } from '../types/rpc/SetNftDid';
 import {
     SignMessageByAddressRequest,
     SignMessageByAddressResponse,
@@ -32,6 +98,8 @@ import {
     SignMessageByIdRequest,
     SignMessageByIdResponse,
 } from '../types/rpc/SignMessageById';
+import { SpendCatRequest, SpendCatResponse } from '../types/rpc/SpendCat';
+import { TakeOfferRequest, TakeOfferResponse } from '../types/rpc/TakeOffer';
 import {
     TransferNftRequest,
     TransferNftResponse,
@@ -52,6 +120,9 @@ interface JsonRpc {
     getWalletBalance: (
         data: GetWalletBalanceRequest
     ) => Promise<GetWalletBalanceResponse>;
+    signMessageById: (
+        data: SignMessageByIdRequest
+    ) => Promise<SignMessageByIdResponse>;
     getCurrentAddress: (
         data: GetCurrentAddressRequest
     ) => Promise<GetCurrentAddressResponse>;
@@ -64,17 +135,62 @@ interface JsonRpc {
     verifySignature: (
         data: VerifySignatureRequest
     ) => Promise<VerifySignatureResponse>;
+    getNextAddress: (
+        data: GetNextAddressRequest
+    ) => Promise<GetNextAddressResponse>;
+    getSyncStatus: (
+        data: GetSyncStatusRequest
+    ) => Promise<GetSyncStatusResponse>;
 
-    // DID
-    signMessageById: (
-        data: SignMessageByIdRequest
-    ) => Promise<SignMessageByIdResponse>;
+    // Offers
+    getAllOffers: (data: GetAllOffersRequest) => Promise<GetAllOffersResponse>;
+    getOffersCount: (
+        data: GetOffersCountRequest
+    ) => Promise<GetOffersCountResponse>;
+    createOfferForIds: (
+        data: CreateOfferForIdsRequest
+    ) => Promise<CreateOfferForIdsResponse>;
+    cancelOffer: (data: CancelOfferRequest) => Promise<CancelOfferResponse>;
+    checkOfferValidity: (
+        data: CheckOfferValidityRequest
+    ) => Promise<CheckOfferValidityResponse>;
+    takeOffer: (data: TakeOfferRequest) => Promise<TakeOfferResponse>;
+    getOfferSummary: (
+        data: GetOfferSummaryRequest
+    ) => Promise<GetOfferSummaryResponse>;
+    getOfferData: (data: GetOfferDataRequest) => Promise<GetOfferDataResponse>;
+    getOfferRecord: (
+        data: GetOfferRecordRequest
+    ) => Promise<GetOfferRecordResponse>;
 
-    // NFT
+    // CATs
+    createNewCatWallet: (
+        data: CreateNewCatWalletRequest
+    ) => Promise<CreateNewCatWalletResponse>;
+    getCatWalletInfo: (
+        data: GetCatWalletInfoRequest
+    ) => Promise<GetCatWalletInfoResponse>;
+    getCatAssetId: (
+        data: GetCatAssetIdRequest
+    ) => Promise<GetCatAssetIdResponse>;
+    spendCat: (data: SpendCatRequest) => Promise<SpendCatResponse>;
+    addCatToken: (data: AddCatTokenRequest) => Promise<AddCatTokenResponse>;
+
+    // NFTs
     getNfts: (data: GetNftsRequest) => Promise<GetNftsResponse>;
     getNftInfo: (data: GetNftInfoRequest) => Promise<GetNftInfoResponse>;
     transferNft: (data: TransferNftRequest) => Promise<TransferNftResponse>;
     getNftsCount: (data: GetNftsCountRequest) => Promise<GetNftsCountResponse>;
+
+    // DIDs
+    createNewDidWallet: (
+        data: CreateNewDidWalletRequest
+    ) => Promise<CreateNewDidWalletResponse>;
+    setDidName: (data: SetDidNameRequest) => Promise<SetDidNameResponse>;
+    setNftDid: (data: SetNftDidRequest) => Promise<SetNftDidResponse>;
+    getNftWalletsWithDids: (
+        data: GetNftWalletsWithDidsRequest
+    ) => Promise<GetNftWalletsWithDidsResponse>;
 }
 
 export const JsonRpcContext = createContext<JsonRpc>({} as JsonRpc);
@@ -138,6 +254,13 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
         );
     }
 
+    async function signMessageById(data: SignMessageByIdRequest) {
+        return await request<SignMessageByIdResponse>(
+            ChiaMethod.SignMessageById,
+            data
+        );
+    }
+
     async function signMessageByAddress(data: SignMessageByAddressRequest) {
         return await request<SignMessageByAddressResponse>(
             ChiaMethod.SignMessageByAddress,
@@ -152,15 +275,111 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
         );
     }
 
-    // DID
-    async function signMessageById(data: SignMessageByIdRequest) {
-        return await request<SignMessageByIdResponse>(
-            ChiaMethod.SignMessageById,
+    async function getNextAddress(data: GetNextAddressRequest) {
+        return await request<GetNextAddressResponse>(
+            ChiaMethod.GetNextAddress,
             data
         );
     }
 
-    // NFT
+    async function getSyncStatus(data: GetSyncStatusRequest) {
+        return await request<GetSyncStatusResponse>(
+            ChiaMethod.GetSyncStatus,
+            data
+        );
+    }
+
+    // Offers
+
+    async function getAllOffers(data: GetAllOffersRequest) {
+        return await request<GetAllOffersResponse>(
+            ChiaMethod.VerifySignature,
+            data
+        );
+    }
+
+    async function getOffersCount(data: GetOffersCountRequest) {
+        return await request<GetOffersCountResponse>(
+            ChiaMethod.GetOffersCount,
+            data
+        );
+    }
+
+    async function createOfferForIds(data: CreateOfferForIdsRequest) {
+        return await request<CreateOfferForIdsResponse>(
+            ChiaMethod.CreateOfferForIds,
+            data
+        );
+    }
+
+    async function cancelOffer(data: CancelOfferRequest) {
+        return await request<CancelOfferResponse>(ChiaMethod.CancelOffer, data);
+    }
+
+    async function checkOfferValidity(data: CheckOfferValidityRequest) {
+        return await request<CheckOfferValidityResponse>(
+            ChiaMethod.CheckOfferValidity,
+            data
+        );
+    }
+
+    async function takeOffer(data: TakeOfferRequest) {
+        return await request<TakeOfferResponse>(ChiaMethod.TakeOffer, data);
+    }
+
+    async function getOfferSummary(data: GetOfferSummaryRequest) {
+        return await request<GetOfferSummaryResponse>(
+            ChiaMethod.GetOfferSummary,
+            data
+        );
+    }
+
+    async function getOfferData(data: GetOfferDataRequest) {
+        return await request<GetOfferDataResponse>(
+            ChiaMethod.GetOfferData,
+            data
+        );
+    }
+
+    async function getOfferRecord(data: GetOfferRecordRequest) {
+        return await request<GetOfferRecordResponse>(
+            ChiaMethod.GetOfferRecord,
+            data
+        );
+    }
+
+    // CATs
+
+    async function createNewCatWallet(data: CreateNewCatWalletRequest) {
+        return await request<CreateNewCatWalletResponse>(
+            ChiaMethod.CreateNewCatWallet,
+            data
+        );
+    }
+
+    async function getCatWalletInfo(data: GetCatWalletInfoRequest) {
+        return await request<GetCatWalletInfoResponse>(
+            ChiaMethod.GetCatWalletInfo,
+            data
+        );
+    }
+
+    async function getCatAssetId(data: GetCatAssetIdRequest) {
+        return await request<GetCatAssetIdResponse>(
+            ChiaMethod.GetCatAssetId,
+            data
+        );
+    }
+
+    async function spendCat(data: SpendCatRequest) {
+        return await request<SpendCatResponse>(ChiaMethod.SpendCat, data);
+    }
+
+    async function addCatToken(data: AddCatTokenRequest) {
+        return await request<AddCatTokenResponse>(ChiaMethod.AddCatToken, data);
+    }
+
+    // NFTs
     async function getNfts(data: GetNftsRequest) {
         return await request<GetNftsResponse>(ChiaMethod.GetNfts, data);
     }
@@ -180,6 +399,30 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
         );
     }
 
+    // DIDs
+
+    async function createNewDidWallet(data: CreateNewDidWalletRequest) {
+        return await request<CreateNewDidWalletResponse>(
+            ChiaMethod.CreateNewDidWallet,
+            data
+        );
+    }
+
+    async function setDidName(data: SetDidNameRequest) {
+        return await request<SetDidNameResponse>(ChiaMethod.SetDidName, data);
+    }
+
+    async function setNftDid(data: SetNftDidRequest) {
+        return await request<SetNftDidResponse>(ChiaMethod.SetNftDid, data);
+    }
+
+    async function getNftWalletsWithDids(data: GetNftWalletsWithDidsRequest) {
+        return await request<GetNftWalletsWithDidsResponse>(
+            ChiaMethod.GetNftWalletsWithDids,
+            data
+        );
+    }
+
     return (
         <JsonRpcContext.Provider
             value={{
@@ -190,17 +433,41 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
                 getWalletBalance,
                 getCurrentAddress,
                 sendTransaction,
+                signMessageById,
                 signMessageByAddress,
                 verifySignature,
+                getNextAddress,
+                getSyncStatus,
 
-                // DID
-                signMessageById,
+                // Offers
+                getAllOffers,
+                getOffersCount,
+                createOfferForIds,
+                cancelOffer,
+                checkOfferValidity,
+                takeOffer,
+                getOfferSummary,
+                getOfferData,
+                getOfferRecord,
 
-                // NFT
+                // CATs
+                createNewCatWallet,
+                getCatWalletInfo,
+                getCatAssetId,
+                spendCat,
+                addCatToken,
+
+                // NFTs
                 getNfts,
                 getNftInfo,
                 transferNft,
                 getNftsCount,
+
+                // DIDs
+                createNewDidWallet,
+                setDidName,
+                setNftDid,
+                getNftWalletsWithDids,
             }}
         >
             {children}

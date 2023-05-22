@@ -32,17 +32,41 @@ export default function Home() {
         getWalletBalance,
         getCurrentAddress,
         sendTransaction,
+        signMessageById,
         signMessageByAddress,
         verifySignature,
+        getNextAddress,
+        getSyncStatus,
 
-        // DID
-        signMessageById,
+        // Offers
+        getAllOffers,
+        getOffersCount,
+        createOfferForIds,
+        cancelOffer,
+        checkOfferValidity,
+        takeOffer,
+        getOfferSummary,
+        getOfferData,
+        getOfferRecord,
 
-        // NFT
+        // CATs
+        createNewCatWallet,
+        getCatWalletInfo,
+        getCatAssetId,
+        spendCat,
+        addCatToken,
+
+        // NFTs
         getNfts,
         getNftInfo,
         transferNft,
         getNftsCount,
+
+        // DIDs
+        createNewDidWallet,
+        setDidName,
+        setNftDid,
+        getNftWalletsWithDids,
     } = useJsonRpc();
 
     const [command, setCommand] = useState(0);
@@ -199,6 +223,13 @@ export default function Home() {
                 })
             ),
         ],
+        chia_signMessageById: [
+            stringOption('Message', message, setMessage),
+            stringOption('DID', did, setDid),
+            requestButton('Sign Message By Id', () =>
+                signMessageById({ message, id: did })
+            ),
+        ],
         chia_signMessageByAddress: [
             stringOption('Message', message, setMessage),
             stringOption('Address', address, setAddress),
@@ -224,13 +255,6 @@ export default function Home() {
         ],
 
         // DID
-        chia_signMessageById: [
-            stringOption('Message', message, setMessage),
-            stringOption('DID', did, setDid),
-            requestButton('Sign Message By Id', () =>
-                signMessageById({ message, id: did })
-            ),
-        ],
 
         // NFT
         chia_getNFTs: [
