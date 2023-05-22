@@ -7,6 +7,10 @@ import {
 import { GetNftInfoRequest, GetNftInfoResponse } from '../types/rpc/GetNftInfo';
 import { GetNftsRequest, GetNftsResponse } from '../types/rpc/GetNfts';
 import {
+    GetNftsCountRequest,
+    GetNftsCountResponse,
+} from '../types/rpc/GetNftsCount';
+import {
     GetTransactionRequest,
     GetTransactionResponse,
 } from '../types/rpc/GetTransaction';
@@ -16,6 +20,10 @@ import {
 } from '../types/rpc/GetWalletBalance';
 import { GetWalletsRequest, GetWalletsResponse } from '../types/rpc/GetWallets';
 import { LogInRequest, LogInResponse } from '../types/rpc/LogIn';
+import {
+    SendTransactionRequest,
+    SendTransactionResponse,
+} from '../types/rpc/SendTransaction';
 import {
     SignMessageByIdRequest,
     SignMessageByIdResponse,
@@ -39,6 +47,9 @@ interface JsonRpc {
     getCurrentAddress: (
         data: GetCurrentAddressRequest
     ) => Promise<GetCurrentAddressResponse>;
+    sendTransaction: (
+        data: SendTransactionRequest
+    ) => Promise<SendTransactionResponse>;
 
     // DID
     signMessageById: (
@@ -49,6 +60,7 @@ interface JsonRpc {
     getNfts: (data: GetNftsRequest) => Promise<GetNftsResponse>;
     getNftInfo: (data: GetNftInfoRequest) => Promise<GetNftInfoResponse>;
     transferNft: (data: TransferNftRequest) => Promise<TransferNftResponse>;
+    getNftsCount: (data: GetNftsCountRequest) => Promise<GetNftsCountResponse>;
 }
 
 export const JsonRpcContext = createContext<JsonRpc>({} as JsonRpc);
@@ -105,6 +117,13 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
         );
     }
 
+    async function sendTransaction(data: SendTransactionRequest) {
+        return await request<SendTransactionResponse>(
+            ChiaMethod.SendTransaction,
+            data
+        );
+    }
+
     // DID
     async function signMessageById(data: SignMessageByIdRequest) {
         return await request<SignMessageByIdResponse>(
@@ -126,6 +145,13 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
         return await request<TransferNftResponse>(ChiaMethod.TransferNft, data);
     }
 
+    async function getNftsCount(data: GetNftsCountRequest) {
+        return await request<GetNftsCountResponse>(
+            ChiaMethod.GetNftsCount,
+            data
+        );
+    }
+
     return (
         <JsonRpcContext.Provider
             value={{
@@ -135,6 +161,7 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
                 getTransaction,
                 getWalletBalance,
                 getCurrentAddress,
+                sendTransaction,
 
                 // DID
                 signMessageById,
@@ -143,6 +170,7 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
                 getNfts,
                 getNftInfo,
                 transferNft,
+                getNftsCount,
             }}
         >
             {children}

@@ -31,6 +31,7 @@ export default function Home() {
         getTransaction,
         getWalletBalance,
         getCurrentAddress,
+        sendTransaction,
 
         // DID
         signMessageById,
@@ -39,6 +40,7 @@ export default function Home() {
         getNfts,
         getNftInfo,
         transferNft,
+        getNftsCount,
     } = useJsonRpc();
 
     const [command, setCommand] = useState(0);
@@ -52,16 +54,21 @@ export default function Home() {
     const [walletId, setWalletId] = useState(0);
     const [transactionId, setTransactionId] = useState('');
     const [coinId, setCoinId] = useState('');
-    const [nftCoinIds, setNftCoinIds] = useState('');
+    const [launcherId, setLauncherId] = useState('');
 
-    const [targetAddress, setTargetAddress] = useState('');
+    const [walletIds, setWalletIds] = useState('');
+    const [memos, setMemos] = useState('');
 
+    const [address, setAddress] = useState('');
+
+    const [amount, setAmount] = useState(0);
     const [fee, setFee] = useState(0);
 
     const [number, setNumber] = useState(50);
     const [startIndex, setStartIndex] = useState(0);
 
     const [includeData, setIncludeData] = useState(false);
+    const [waitForConfirmation, setWaitForConfirmation] = useState(false);
 
     const onConnect = () => {
         if (!client) throw new Error('WalletConnect is not initialized.');
@@ -163,6 +170,30 @@ export default function Home() {
                 getCurrentAddress({ walletId })
             ),
         ],
+        chia_sendTransaction: [
+            numberOption('Wallet Id', walletId, setWalletId),
+            numberOption('Amount', amount, setAmount),
+            numberOption('Fee', fee, setFee),
+            stringOption('Address', address, setAddress),
+            stringOption('Memos', memos, setMemos),
+            booleanOption(
+                'Wait For Confirmation',
+                waitForConfirmation,
+                setWaitForConfirmation
+            ),
+            requestButton('Send Transaction', () =>
+                sendTransaction({
+                    walletId,
+                    amount,
+                    fee,
+                    address,
+                    memos: memos.trim().length
+                        ? memos.split(',').map((memo) => memo.trim())
+                        : [],
+                    waitForConfirmation,
+                })
+            ),
+        ],
 
         // DID
         chia_signMessageById: [
@@ -186,17 +217,29 @@ export default function Home() {
             stringOption('Coin Id', coinId, setCoinId),
             requestButton('Get NFT Info', () => getNftInfo({ coinId })),
         ],
-        chia_transferNft: [
+        chia_transferNFT: [
             numberOption('Wallet Id', walletId, setWalletId),
-            stringOption('NFT Coin Ids', nftCoinIds, setNftCoinIds),
-            stringOption('Target Address', targetAddress, setTargetAddress),
+            stringOption('Coin Id', coinId, setCoinId),
+            stringOption('Launcher Id', launcherId, setLauncherId),
+            stringOption('Target Address', address, setAddress),
             numberOption('Fee', fee, setFee),
             requestButton('Transfer NFT', () =>
                 transferNft({
                     walletId,
-                    nftCoinIds: nftCoinIds.split(',').map((id) => id.trim()),
-                    targetAddress,
+                    nftCoinId: coinId,
+                    launcherId,
+                    targetAddress: address,
                     fee,
+                })
+            ),
+        ],
+        chia_getNftsCount: [
+            stringOption('Wallet Ids', walletIds, setWalletIds),
+            requestButton('Get NFTs Count', () =>
+                getNftsCount({
+                    walletIds: walletIds.trim().length
+                        ? walletIds.split(',').map((id) => +id.trim())
+                        : [],
                 })
             ),
         ],
