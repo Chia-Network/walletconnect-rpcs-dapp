@@ -3,7 +3,7 @@ export interface SpendCatRequest {
     address: string;
     amount: number;
     fee: number;
-    memos?: string;
+    memos?: string[];
     waitForConfirmation?: boolean;
 }
 

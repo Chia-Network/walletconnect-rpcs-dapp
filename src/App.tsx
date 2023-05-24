@@ -73,31 +73,47 @@ export default function Home() {
     const [response, setResponse] = useState<any>(null);
 
     const [fingerprint, setFingerprint] = useState(0);
+    const [amount, setAmount] = useState(0);
+    const [fee, setFee] = useState(0);
+    const [number, setNumber] = useState(50);
+    const [startIndex, setStartIndex] = useState(0);
+    const [endIndex, setEndIndex] = useState(0);
+    const [backupDidsNeeded, setBackupDidsNeeded] = useState(0);
 
+    const [name, setName] = useState('');
     const [message, setMessage] = useState('');
     const [did, setDid] = useState('');
     const [publicKey, setPublicKey] = useState('');
     const [signature, setSignature] = useState('');
     const [signingMode, setSigningMode] = useState('');
+    const [address, setAddress] = useState('');
+    const [sortKey, setSortKey] = useState('');
+    const [offerData, setOfferData] = useState('');
+
+    const [walletIdsAndAmounts, setWalletIdsAndAmounts] = useState('');
+    const [driverDict, setDriverDict] = useState('');
 
     const [walletId, setWalletId] = useState(0);
     const [transactionId, setTransactionId] = useState('');
     const [coinId, setCoinId] = useState('');
     const [launcherId, setLauncherId] = useState('');
-
+    const [tradeId, setTradeId] = useState('');
+    const [offerId, setOfferId] = useState('');
+    const [assetId, setAssetId] = useState('');
+    const [nftCoinIds, setNftCoinIds] = useState('');
     const [walletIds, setWalletIds] = useState('');
+    const [backupDids, setBackupDids] = useState('');
     const [memos, setMemos] = useState('');
 
-    const [address, setAddress] = useState('');
-
-    const [amount, setAmount] = useState(0);
-    const [fee, setFee] = useState(0);
-
-    const [number, setNumber] = useState(50);
-    const [startIndex, setStartIndex] = useState(0);
-
     const [includeData, setIncludeData] = useState(false);
+    const [newAddress, setNewAddress] = useState(false);
     const [waitForConfirmation, setWaitForConfirmation] = useState(false);
+    const [includeMyOffers, setIncludeMyOffers] = useState(false);
+    const [includeTakenOffers, setIncludeTakenOffers] = useState(false);
+    const [reverse, setReverse] = useState(false);
+    const [disableJsonFormatting, setDisableJsonFormatting] = useState(false);
+    const [validateOnly, setValidateOnly] = useState(false);
+    const [secure, setSecure] = useState(false);
 
     const onConnect = () => {
         if (!client) throw new Error('WalletConnect is not initialized.');
@@ -142,7 +158,7 @@ export default function Home() {
             type='number'
             label={name}
             variant='outlined'
-            value={value}
+            value={value || ''}
             onChange={(e) => setValue(+e.target.value)}
         />
     );
@@ -253,10 +269,165 @@ export default function Home() {
                 })
             ),
         ],
+        chia_getNextAddress: [
+            numberOption('Wallet Id', walletId, setWalletId),
+            booleanOption('New Address', newAddress, setNewAddress),
+            requestButton('Get Next Address', () =>
+                getNextAddress({ walletId: walletId || undefined, newAddress })
+            ),
+        ],
+        chia_getSyncStatus: [
+            requestButton('Get Sync Status', () => getSyncStatus({})),
+        ],
 
-        // DID
+        // Offers
+        chia_getAllOffers: [
+            numberOption('Start Index', startIndex, setStartIndex),
+            numberOption('End Index', endIndex, setEndIndex),
+            booleanOption(
+                'Include My Offers',
+                includeMyOffers,
+                setIncludeMyOffers
+            ),
+            booleanOption(
+                'Include Taken Offers',
+                includeTakenOffers,
+                setIncludeTakenOffers
+            ),
+            booleanOption('Reverse', reverse, setReverse),
+            stringOption('Sort Key', sortKey, setSortKey),
+            requestButton('Get All Offers', () =>
+                getAllOffers({
+                    start: startIndex || undefined,
+                    end: endIndex || undefined,
+                    includeMyOffers,
+                    includeTakenOffers,
+                    reverse,
+                    sortKey: sortKey || undefined,
+                })
+            ),
+        ],
+        chia_getOffersCount: [
+            requestButton('Get Offers Count', () => getOffersCount({})),
+        ],
+        chia_createOfferForIds: [
+            booleanOption(
+                'Disable JSON Formatting',
+                disableJsonFormatting,
+                setDisableJsonFormatting
+            ),
+            booleanOption('Validate Only', validateOnly, setValidateOnly),
+            stringOption(
+                'Wallet Ids And Amounts',
+                walletIdsAndAmounts,
+                setWalletIdsAndAmounts
+            ),
+            stringOption('Driver Dict', driverDict, setDriverDict),
+            requestButton('Create Offer For Ids', () =>
+                createOfferForIds({
+                    disableJSONFormatting: disableJsonFormatting,
+                    validateOnly,
+                    walletIdsAndAmounts: JSON.parse(
+                        walletIdsAndAmounts || '{}'
+                    ),
+                    driverDict: JSON.parse(driverDict || '{}'),
+                })
+            ),
+        ],
+        chia_cancelOffer: [
+            numberOption('Fee', fee, setFee),
+            booleanOption('Secure', secure, setSecure),
+            stringOption('Trade Id', tradeId, setTradeId),
+            requestButton('Cancel Offer', () =>
+                cancelOffer({
+                    fee,
+                    secure,
+                    tradeId,
+                })
+            ),
+        ],
+        chia_checkOfferValidity: [
+            stringOption('Offer Data', offerData, setOfferData),
+            requestButton('Check Offer Validity', () =>
+                checkOfferValidity({ offerData })
+            ),
+        ],
+        chia_takeOffer: [
+            numberOption('Fee', fee, setFee),
+            stringOption('Offer Data', offerData, setOfferData),
+            requestButton('Take Offer', () =>
+                takeOffer({ fee, offer: offerData })
+            ),
+        ],
+        chia_getOfferSummary: [
+            stringOption('Offer Data', offerData, setOfferData),
+            requestButton('Get Offer Summary', () =>
+                getOfferSummary({ offerData })
+            ),
+        ],
+        chia_getOfferData: [
+            stringOption('Offer Id', offerId, setOfferId),
+            requestButton('Get Offer Data', () => getOfferData({ offerId })),
+        ],
+        chia_getOfferRecord: [
+            stringOption('Offer Id', offerId, setOfferId),
+            requestButton('Get Offer Record', () =>
+                getOfferRecord({ offerId })
+            ),
+        ],
 
-        // NFT
+        // CATs
+        chia_createNewCATWallet: [
+            numberOption('Amount', amount, setAmount),
+            numberOption('Fee', fee, setFee),
+            requestButton('Create New CAT Wallet', () =>
+                createNewCatWallet({ amount, fee })
+            ),
+        ],
+        chia_getCATWalletInfo: [
+            stringOption('Asset Id', assetId, setAssetId),
+            requestButton('Get CAT Wallet Info', () =>
+                getCatWalletInfo({ assetId })
+            ),
+        ],
+        chia_getCATAssetId: [
+            numberOption('Wallet Id', walletId, setWalletId),
+            requestButton('Get CAT Asset Id', () =>
+                getCatAssetId({ walletId })
+            ),
+        ],
+        chia_spendCAT: [
+            numberOption('Wallet Id', walletId, setWalletId),
+            stringOption('Address', address, setAddress),
+            numberOption('Amount', amount, setAmount),
+            numberOption('Fee', fee, setFee),
+            booleanOption(
+                'Wait For Confirmation',
+                waitForConfirmation,
+                setWaitForConfirmation
+            ),
+            requestButton('Spend CAT', () =>
+                spendCat({
+                    walletId,
+                    address,
+                    amount,
+                    fee,
+                    memos: memos.trim().length
+                        ? memos.split(',').map((memo) => memo.trim())
+                        : undefined,
+                    waitForConfirmation,
+                })
+            ),
+        ],
+        chia_addCATToken: [
+            stringOption('Name', name, setName),
+            stringOption('Asset Id', assetId, setAssetId),
+            requestButton('Add CAT Token', () =>
+                addCatToken({ name, assetId })
+            ),
+        ],
+
+        // NFTs
         chia_getNFTs: [
             numberOption('Wallet Id', walletId, setWalletId),
             numberOption('Number', number, setNumber),
@@ -293,6 +464,56 @@ export default function Home() {
                         ? walletIds.split(',').map((id) => +id.trim())
                         : [],
                 })
+            ),
+        ],
+
+        // DIDs
+        chia_createNewDIDWallet: [
+            numberOption('Amount', amount, setAmount),
+            numberOption('Fee', fee, setFee),
+            numberOption(
+                'Number of Backup Dids Needed',
+                backupDidsNeeded,
+                setBackupDidsNeeded
+            ),
+            stringOption('Backup Dids', backupDids, setBackupDids),
+            requestButton('Create New DID Wallet', () =>
+                createNewDidWallet({
+                    amount,
+                    fee,
+                    backupDids: backupDids.trim().length
+                        ? backupDids.split(',').map((id) => id.trim())
+                        : [],
+                    numOfBackupIdsNeeded: backupDidsNeeded,
+                })
+            ),
+        ],
+        chia_setDIDName: [
+            numberOption('Wallet Id', walletId, setWalletId),
+            stringOption('Name', name, setName),
+            requestButton('Set DID Name', () => setDidName({ name, walletId })),
+        ],
+        chia_setNFTDID: [
+            numberOption('Wallet Id', walletId, setWalletId),
+            stringOption('NFT Coin Ids', nftCoinIds, setNftCoinIds),
+            stringOption('Launcher Id', launcherId, setLauncherId),
+            stringOption('DID', did, setDid),
+            numberOption('Fee', fee, setFee),
+            requestButton('Set NFT DID', () =>
+                setNftDid({
+                    walletId,
+                    nftCoinIds: nftCoinIds.trim().length
+                        ? nftCoinIds.split(',').map((id) => id.trim())
+                        : [],
+                    nftLauncherId: launcherId,
+                    did,
+                    fee,
+                })
+            ),
+        ],
+        chia_getNFTWalletsWithDIDs: [
+            requestButton('Get NFT Wallets With DIDs', () =>
+                getNftWalletsWithDids({})
             ),
         ],
     };
