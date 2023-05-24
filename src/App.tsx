@@ -22,7 +22,7 @@ export default function Home() {
         useWalletConnect();
 
     const [command, setCommand] = useState(0);
-    const { commands, response } = useRpcUi();
+    const { commands, responseData } = useRpcUi();
 
     const commandEntry = Object.entries(commands)[command];
 
@@ -138,7 +138,7 @@ export default function Home() {
                             language='json'
                             style={github}
                         >
-                            {JSON.stringify(response, null, 4)}
+                            {JSON.stringify(responseData, null, 4)}
                         </SyntaxHighlighter>
                     </Box>
                 </>

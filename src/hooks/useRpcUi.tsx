@@ -11,7 +11,7 @@ import { useJsonRpc } from '../contexts/JsonRpcContext';
 export function useRpcUi() {
     const rpc = useJsonRpc();
 
-    const [response, setResponse] = useState<any>(null);
+    const [responseData, setResponseData] = useState<any>(null);
 
     const [fingerprint, setFingerprint] = useState(0);
     const [amount, setAmount] = useState(0);
@@ -56,24 +56,24 @@ export function useRpcUi() {
     const [validateOnly, setValidateOnly] = useState(false);
     const [secure, setSecure] = useState(false);
 
-    function handleResponsePromise(promise: Promise<any>) {
+    function handlePromise(promise: Promise<any>) {
         promise
             .then((data) => {
                 console.log(data);
-                setResponse(data);
+                setResponseData(data);
             })
             .catch((error) => {
                 console.error(error);
-                setResponse({ error: error.message });
+                setResponseData({ error: error.message });
             });
     }
 
-    function requestButton(name: string, request: () => Promise<any>) {
+    function submitButton(name: string, request: () => Promise<any>) {
         return (
             <Button
                 fullWidth
                 variant='contained'
-                onClick={() => handleResponsePromise(request())}
+                onClick={() => handlePromise(request())}
             >
                 {name}
             </Button>
@@ -84,27 +84,27 @@ export function useRpcUi() {
         // Wallet
         chia_logIn: [
             numberOption('Fingerprint', fingerprint, setFingerprint),
-            requestButton('Log In', () => rpc.logIn({ fingerprint })),
+            submitButton('Log In', () => rpc.logIn({ fingerprint })),
         ],
         chia_getWallets: [
             booleanOption('Include Data', includeData, setIncludeData),
-            requestButton('Get Wallets', () => rpc.getWallets({ includeData })),
+            submitButton('Get Wallets', () => rpc.getWallets({ includeData })),
         ],
         chia_getTransaction: [
             stringOption('Transaction Id', transactionId, setTransactionId),
-            requestButton('Get Transaction', () =>
+            submitButton('Get Transaction', () =>
                 rpc.getTransaction({ transactionId })
             ),
         ],
         chia_getWalletBalance: [
             numberOption('Wallet Id', walletId, setWalletId),
-            requestButton('Get Wallet Balance', () =>
+            submitButton('Get Wallet Balance', () =>
                 rpc.getWalletBalance({ walletId })
             ),
         ],
         chia_getCurrentAddress: [
             numberOption('Wallet Id', walletId, setWalletId),
-            requestButton('Get Current Address', () =>
+            submitButton('Get Current Address', () =>
                 rpc.getCurrentAddress({ walletId })
             ),
         ],
@@ -119,7 +119,7 @@ export function useRpcUi() {
                 waitForConfirmation,
                 setWaitForConfirmation
             ),
-            requestButton('Send Transaction', () =>
+            submitButton('Send Transaction', () =>
                 rpc.sendTransaction({
                     walletId,
                     amount,
@@ -135,14 +135,14 @@ export function useRpcUi() {
         chia_signMessageById: [
             stringOption('Message', message, setMessage),
             stringOption('DID', did, setDid),
-            requestButton('Sign Message By Id', () =>
+            submitButton('Sign Message By Id', () =>
                 rpc.signMessageById({ message, id: did })
             ),
         ],
         chia_signMessageByAddress: [
             stringOption('Message', message, setMessage),
             stringOption('Address', address, setAddress),
-            requestButton('Sign Message By Address', () =>
+            submitButton('Sign Message By Address', () =>
                 rpc.signMessageByAddress({ message, address: address })
             ),
         ],
@@ -152,7 +152,7 @@ export function useRpcUi() {
             stringOption('Signature', signature, setSignature),
             stringOption('Address', address, setAddress),
             stringOption('Signing Mode', signingMode, setSigningMode),
-            requestButton('Verify Signature', () =>
+            submitButton('Verify Signature', () =>
                 rpc.verifySignature({
                     message,
                     pubkey: publicKey,
@@ -165,7 +165,7 @@ export function useRpcUi() {
         chia_getNextAddress: [
             numberOption('Wallet Id', walletId, setWalletId),
             booleanOption('New Address', newAddress, setNewAddress),
-            requestButton('Get Next Address', () =>
+            submitButton('Get Next Address', () =>
                 rpc.getNextAddress({
                     walletId: walletId || undefined,
                     newAddress,
@@ -173,7 +173,7 @@ export function useRpcUi() {
             ),
         ],
         chia_getSyncStatus: [
-            requestButton('Get Sync Status', () => rpc.getSyncStatus({})),
+            submitButton('Get Sync Status', () => rpc.getSyncStatus({})),
         ],
 
         // Offers
@@ -192,7 +192,7 @@ export function useRpcUi() {
             ),
             booleanOption('Reverse', reverse, setReverse),
             stringOption('Sort Key', sortKey, setSortKey),
-            requestButton('Get All Offers', () =>
+            submitButton('Get All Offers', () =>
                 rpc.getAllOffers({
                     start: startIndex || undefined,
                     end: endIndex || undefined,
@@ -204,7 +204,7 @@ export function useRpcUi() {
             ),
         ],
         chia_getOffersCount: [
-            requestButton('Get Offers Count', () => rpc.getOffersCount({})),
+            submitButton('Get Offers Count', () => rpc.getOffersCount({})),
         ],
         chia_createOfferForIds: [
             booleanOption(
@@ -219,7 +219,7 @@ export function useRpcUi() {
                 setWalletIdsAndAmounts
             ),
             stringOption('Driver Dict', driverDict, setDriverDict),
-            requestButton('Create Offer For Ids', () =>
+            submitButton('Create Offer For Ids', () =>
                 rpc.createOfferForIds({
                     disableJSONFormatting: disableJsonFormatting,
                     validateOnly,
@@ -234,7 +234,7 @@ export function useRpcUi() {
             numberOption('Fee', fee, setFee),
             booleanOption('Secure', secure, setSecure),
             stringOption('Trade Id', tradeId, setTradeId),
-            requestButton('Cancel Offer', () =>
+            submitButton('Cancel Offer', () =>
                 rpc.cancelOffer({
                     fee,
                     secure,
@@ -244,32 +244,30 @@ export function useRpcUi() {
         ],
         chia_checkOfferValidity: [
             stringOption('Offer Data', offerData, setOfferData),
-            requestButton('Check Offer Validity', () =>
+            submitButton('Check Offer Validity', () =>
                 rpc.checkOfferValidity({ offerData })
             ),
         ],
         chia_takeOffer: [
             numberOption('Fee', fee, setFee),
             stringOption('Offer Data', offerData, setOfferData),
-            requestButton('Take Offer', () =>
+            submitButton('Take Offer', () =>
                 rpc.takeOffer({ fee, offer: offerData })
             ),
         ],
         chia_getOfferSummary: [
             stringOption('Offer Data', offerData, setOfferData),
-            requestButton('Get Offer Summary', () =>
+            submitButton('Get Offer Summary', () =>
                 rpc.getOfferSummary({ offerData })
             ),
         ],
         chia_getOfferData: [
             stringOption('Offer Id', offerId, setOfferId),
-            requestButton('Get Offer Data', () =>
-                rpc.getOfferData({ offerId })
-            ),
+            submitButton('Get Offer Data', () => rpc.getOfferData({ offerId })),
         ],
         chia_getOfferRecord: [
             stringOption('Offer Id', offerId, setOfferId),
-            requestButton('Get Offer Record', () =>
+            submitButton('Get Offer Record', () =>
                 rpc.getOfferRecord({ offerId })
             ),
         ],
@@ -278,19 +276,19 @@ export function useRpcUi() {
         chia_createNewCATWallet: [
             numberOption('Amount', amount, setAmount),
             numberOption('Fee', fee, setFee),
-            requestButton('Create New CAT Wallet', () =>
+            submitButton('Create New CAT Wallet', () =>
                 rpc.createNewCatWallet({ amount, fee })
             ),
         ],
         chia_getCATWalletInfo: [
             stringOption('Asset Id', assetId, setAssetId),
-            requestButton('Get CAT Wallet Info', () =>
+            submitButton('Get CAT Wallet Info', () =>
                 rpc.getCatWalletInfo({ assetId })
             ),
         ],
         chia_getCATAssetId: [
             numberOption('Wallet Id', walletId, setWalletId),
-            requestButton('Get CAT Asset Id', () =>
+            submitButton('Get CAT Asset Id', () =>
                 rpc.getCatAssetId({ walletId })
             ),
         ],
@@ -304,7 +302,7 @@ export function useRpcUi() {
                 waitForConfirmation,
                 setWaitForConfirmation
             ),
-            requestButton('Spend CAT', () =>
+            submitButton('Spend CAT', () =>
                 rpc.spendCat({
                     walletId,
                     address,
@@ -320,7 +318,7 @@ export function useRpcUi() {
         chia_addCATToken: [
             stringOption('Name', name, setName),
             stringOption('Asset Id', assetId, setAssetId),
-            requestButton('Add CAT Token', () =>
+            submitButton('Add CAT Token', () =>
                 rpc.addCatToken({ name, assetId })
             ),
         ],
@@ -330,13 +328,13 @@ export function useRpcUi() {
             numberOption('Wallet Id', walletId, setWalletId),
             numberOption('Number', number, setNumber),
             numberOption('Start Index', startIndex, setStartIndex),
-            requestButton('Get NFTs', () =>
+            submitButton('Get NFTs', () =>
                 rpc.getNfts({ walletIds: [walletId], num: number, startIndex })
             ),
         ],
         chia_getNFTInfo: [
             stringOption('Coin Id', coinId, setCoinId),
-            requestButton('Get NFT Info', () => rpc.getNftInfo({ coinId })),
+            submitButton('Get NFT Info', () => rpc.getNftInfo({ coinId })),
         ],
         chia_transferNFT: [
             numberOption('Wallet Id', walletId, setWalletId),
@@ -344,7 +342,7 @@ export function useRpcUi() {
             stringOption('Launcher Id', launcherId, setLauncherId),
             stringOption('Address', address, setAddress),
             numberOption('Fee', fee, setFee),
-            requestButton('Transfer NFT', () =>
+            submitButton('Transfer NFT', () =>
                 rpc.transferNft({
                     walletId,
                     nftCoinId: coinId,
@@ -356,7 +354,7 @@ export function useRpcUi() {
         ],
         chia_getNftsCount: [
             stringOption('Wallet Ids', walletIds, setWalletIds),
-            requestButton('Get NFTs Count', () =>
+            submitButton('Get NFTs Count', () =>
                 rpc.getNftsCount({
                     walletIds: walletIds.trim().length
                         ? walletIds.split(',').map((id) => +id.trim())
@@ -375,7 +373,7 @@ export function useRpcUi() {
                 setBackupDidsNeeded
             ),
             stringOption('Backup Dids', backupDids, setBackupDids),
-            requestButton('Create New DID Wallet', () =>
+            submitButton('Create New DID Wallet', () =>
                 rpc.createNewDidWallet({
                     amount,
                     fee,
@@ -389,7 +387,7 @@ export function useRpcUi() {
         chia_setDIDName: [
             numberOption('Wallet Id', walletId, setWalletId),
             stringOption('Name', name, setName),
-            requestButton('Set DID Name', () =>
+            submitButton('Set DID Name', () =>
                 rpc.setDidName({ name, walletId })
             ),
         ],
@@ -399,7 +397,7 @@ export function useRpcUi() {
             stringOption('Launcher Id', launcherId, setLauncherId),
             stringOption('DID', did, setDid),
             numberOption('Fee', fee, setFee),
-            requestButton('Set NFT DID', () =>
+            submitButton('Set NFT DID', () =>
                 rpc.setNftDid({
                     walletId,
                     nftCoinIds: nftCoinIds.trim().length
@@ -412,13 +410,13 @@ export function useRpcUi() {
             ),
         ],
         chia_getNFTWalletsWithDIDs: [
-            requestButton('Get NFT Wallets With DIDs', () =>
+            submitButton('Get NFT Wallets With DIDs', () =>
                 rpc.getNftWalletsWithDids({})
             ),
         ],
     };
 
-    return { commands, response };
+    return { commands, responseData };
 }
 
 function stringOption(
