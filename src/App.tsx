@@ -24,50 +24,8 @@ import { useWalletConnect } from './contexts/WalletConnectContext';
 export default function Home() {
     const { client, session, pairings, connect, disconnect } =
         useWalletConnect();
-    const {
-        // Wallet
-        logIn,
-        getWallets,
-        getTransaction,
-        getWalletBalance,
-        getCurrentAddress,
-        sendTransaction,
-        signMessageById,
-        signMessageByAddress,
-        verifySignature,
-        getNextAddress,
-        getSyncStatus,
 
-        // Offers
-        getAllOffers,
-        getOffersCount,
-        createOfferForIds,
-        cancelOffer,
-        checkOfferValidity,
-        takeOffer,
-        getOfferSummary,
-        getOfferData,
-        getOfferRecord,
-
-        // CATs
-        createNewCatWallet,
-        getCatWalletInfo,
-        getCatAssetId,
-        spendCat,
-        addCatToken,
-
-        // NFTs
-        getNfts,
-        getNftInfo,
-        transferNft,
-        getNftsCount,
-
-        // DIDs
-        createNewDidWallet,
-        setDidName,
-        setNftDid,
-        getNftWalletsWithDids,
-    } = useJsonRpc();
+    const rpc = useJsonRpc();
 
     const [command, setCommand] = useState(0);
     const [response, setResponse] = useState<any>(null);
@@ -191,28 +149,28 @@ export default function Home() {
         // Wallet
         chia_logIn: [
             numberOption('Fingerprint', fingerprint, setFingerprint),
-            requestButton('Log In', () => logIn({ fingerprint })),
+            requestButton('Log In', () => rpc.logIn({ fingerprint })),
         ],
         chia_getWallets: [
             booleanOption('Include Data', includeData, setIncludeData),
-            requestButton('Get Wallets', () => getWallets({ includeData })),
+            requestButton('Get Wallets', () => rpc.getWallets({ includeData })),
         ],
         chia_getTransaction: [
             stringOption('Transaction Id', transactionId, setTransactionId),
             requestButton('Get Transaction', () =>
-                getTransaction({ transactionId })
+                rpc.getTransaction({ transactionId })
             ),
         ],
         chia_getWalletBalance: [
             numberOption('Wallet Id', walletId, setWalletId),
             requestButton('Get Wallet Balance', () =>
-                getWalletBalance({ walletId })
+                rpc.getWalletBalance({ walletId })
             ),
         ],
         chia_getCurrentAddress: [
             numberOption('Wallet Id', walletId, setWalletId),
             requestButton('Get Current Address', () =>
-                getCurrentAddress({ walletId })
+                rpc.getCurrentAddress({ walletId })
             ),
         ],
         chia_sendTransaction: [
@@ -227,7 +185,7 @@ export default function Home() {
                 setWaitForConfirmation
             ),
             requestButton('Send Transaction', () =>
-                sendTransaction({
+                rpc.sendTransaction({
                     walletId,
                     amount,
                     fee,
@@ -243,14 +201,14 @@ export default function Home() {
             stringOption('Message', message, setMessage),
             stringOption('DID', did, setDid),
             requestButton('Sign Message By Id', () =>
-                signMessageById({ message, id: did })
+                rpc.signMessageById({ message, id: did })
             ),
         ],
         chia_signMessageByAddress: [
             stringOption('Message', message, setMessage),
             stringOption('Address', address, setAddress),
             requestButton('Sign Message By Address', () =>
-                signMessageByAddress({ message, address: address })
+                rpc.signMessageByAddress({ message, address: address })
             ),
         ],
         chia_verifySignature: [
@@ -260,7 +218,7 @@ export default function Home() {
             stringOption('Address', address, setAddress),
             stringOption('Signing Mode', signingMode, setSigningMode),
             requestButton('Verify Signature', () =>
-                verifySignature({
+                rpc.verifySignature({
                     message,
                     pubkey: publicKey,
                     signature,
@@ -273,11 +231,14 @@ export default function Home() {
             numberOption('Wallet Id', walletId, setWalletId),
             booleanOption('New Address', newAddress, setNewAddress),
             requestButton('Get Next Address', () =>
-                getNextAddress({ walletId: walletId || undefined, newAddress })
+                rpc.getNextAddress({
+                    walletId: walletId || undefined,
+                    newAddress,
+                })
             ),
         ],
         chia_getSyncStatus: [
-            requestButton('Get Sync Status', () => getSyncStatus({})),
+            requestButton('Get Sync Status', () => rpc.getSyncStatus({})),
         ],
 
         // Offers
@@ -297,7 +258,7 @@ export default function Home() {
             booleanOption('Reverse', reverse, setReverse),
             stringOption('Sort Key', sortKey, setSortKey),
             requestButton('Get All Offers', () =>
-                getAllOffers({
+                rpc.getAllOffers({
                     start: startIndex || undefined,
                     end: endIndex || undefined,
                     includeMyOffers,
@@ -308,7 +269,7 @@ export default function Home() {
             ),
         ],
         chia_getOffersCount: [
-            requestButton('Get Offers Count', () => getOffersCount({})),
+            requestButton('Get Offers Count', () => rpc.getOffersCount({})),
         ],
         chia_createOfferForIds: [
             booleanOption(
@@ -324,7 +285,7 @@ export default function Home() {
             ),
             stringOption('Driver Dict', driverDict, setDriverDict),
             requestButton('Create Offer For Ids', () =>
-                createOfferForIds({
+                rpc.createOfferForIds({
                     disableJSONFormatting: disableJsonFormatting,
                     validateOnly,
                     walletIdsAndAmounts: JSON.parse(
@@ -339,7 +300,7 @@ export default function Home() {
             booleanOption('Secure', secure, setSecure),
             stringOption('Trade Id', tradeId, setTradeId),
             requestButton('Cancel Offer', () =>
-                cancelOffer({
+                rpc.cancelOffer({
                     fee,
                     secure,
                     tradeId,
@@ -349,30 +310,32 @@ export default function Home() {
         chia_checkOfferValidity: [
             stringOption('Offer Data', offerData, setOfferData),
             requestButton('Check Offer Validity', () =>
-                checkOfferValidity({ offerData })
+                rpc.checkOfferValidity({ offerData })
             ),
         ],
         chia_takeOffer: [
             numberOption('Fee', fee, setFee),
             stringOption('Offer Data', offerData, setOfferData),
             requestButton('Take Offer', () =>
-                takeOffer({ fee, offer: offerData })
+                rpc.takeOffer({ fee, offer: offerData })
             ),
         ],
         chia_getOfferSummary: [
             stringOption('Offer Data', offerData, setOfferData),
             requestButton('Get Offer Summary', () =>
-                getOfferSummary({ offerData })
+                rpc.getOfferSummary({ offerData })
             ),
         ],
         chia_getOfferData: [
             stringOption('Offer Id', offerId, setOfferId),
-            requestButton('Get Offer Data', () => getOfferData({ offerId })),
+            requestButton('Get Offer Data', () =>
+                rpc.getOfferData({ offerId })
+            ),
         ],
         chia_getOfferRecord: [
             stringOption('Offer Id', offerId, setOfferId),
             requestButton('Get Offer Record', () =>
-                getOfferRecord({ offerId })
+                rpc.getOfferRecord({ offerId })
             ),
         ],
 
@@ -381,19 +344,19 @@ export default function Home() {
             numberOption('Amount', amount, setAmount),
             numberOption('Fee', fee, setFee),
             requestButton('Create New CAT Wallet', () =>
-                createNewCatWallet({ amount, fee })
+                rpc.createNewCatWallet({ amount, fee })
             ),
         ],
         chia_getCATWalletInfo: [
             stringOption('Asset Id', assetId, setAssetId),
             requestButton('Get CAT Wallet Info', () =>
-                getCatWalletInfo({ assetId })
+                rpc.getCatWalletInfo({ assetId })
             ),
         ],
         chia_getCATAssetId: [
             numberOption('Wallet Id', walletId, setWalletId),
             requestButton('Get CAT Asset Id', () =>
-                getCatAssetId({ walletId })
+                rpc.getCatAssetId({ walletId })
             ),
         ],
         chia_spendCAT: [
@@ -407,7 +370,7 @@ export default function Home() {
                 setWaitForConfirmation
             ),
             requestButton('Spend CAT', () =>
-                spendCat({
+                rpc.spendCat({
                     walletId,
                     address,
                     amount,
@@ -423,7 +386,7 @@ export default function Home() {
             stringOption('Name', name, setName),
             stringOption('Asset Id', assetId, setAssetId),
             requestButton('Add CAT Token', () =>
-                addCatToken({ name, assetId })
+                rpc.addCatToken({ name, assetId })
             ),
         ],
 
@@ -433,12 +396,12 @@ export default function Home() {
             numberOption('Number', number, setNumber),
             numberOption('Start Index', startIndex, setStartIndex),
             requestButton('Get NFTs', () =>
-                getNfts({ walletIds: [walletId], num: number, startIndex })
+                rpc.getNfts({ walletIds: [walletId], num: number, startIndex })
             ),
         ],
         chia_getNFTInfo: [
             stringOption('Coin Id', coinId, setCoinId),
-            requestButton('Get NFT Info', () => getNftInfo({ coinId })),
+            requestButton('Get NFT Info', () => rpc.getNftInfo({ coinId })),
         ],
         chia_transferNFT: [
             numberOption('Wallet Id', walletId, setWalletId),
@@ -447,7 +410,7 @@ export default function Home() {
             stringOption('Address', address, setAddress),
             numberOption('Fee', fee, setFee),
             requestButton('Transfer NFT', () =>
-                transferNft({
+                rpc.transferNft({
                     walletId,
                     nftCoinId: coinId,
                     launcherId,
@@ -459,7 +422,7 @@ export default function Home() {
         chia_getNftsCount: [
             stringOption('Wallet Ids', walletIds, setWalletIds),
             requestButton('Get NFTs Count', () =>
-                getNftsCount({
+                rpc.getNftsCount({
                     walletIds: walletIds.trim().length
                         ? walletIds.split(',').map((id) => +id.trim())
                         : [],
@@ -478,7 +441,7 @@ export default function Home() {
             ),
             stringOption('Backup Dids', backupDids, setBackupDids),
             requestButton('Create New DID Wallet', () =>
-                createNewDidWallet({
+                rpc.createNewDidWallet({
                     amount,
                     fee,
                     backupDids: backupDids.trim().length
@@ -491,7 +454,9 @@ export default function Home() {
         chia_setDIDName: [
             numberOption('Wallet Id', walletId, setWalletId),
             stringOption('Name', name, setName),
-            requestButton('Set DID Name', () => setDidName({ name, walletId })),
+            requestButton('Set DID Name', () =>
+                rpc.setDidName({ name, walletId })
+            ),
         ],
         chia_setNFTDID: [
             numberOption('Wallet Id', walletId, setWalletId),
@@ -500,7 +465,7 @@ export default function Home() {
             stringOption('DID', did, setDid),
             numberOption('Fee', fee, setFee),
             requestButton('Set NFT DID', () =>
-                setNftDid({
+                rpc.setNftDid({
                     walletId,
                     nftCoinIds: nftCoinIds.trim().length
                         ? nftCoinIds.split(',').map((id) => id.trim())
@@ -513,7 +478,7 @@ export default function Home() {
         ],
         chia_getNFTWalletsWithDIDs: [
             requestButton('Get NFT Wallets With DIDs', () =>
-                getNftWalletsWithDids({})
+                rpc.getNftWalletsWithDids({})
             ),
         ],
     };
