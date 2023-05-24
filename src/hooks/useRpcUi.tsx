@@ -446,7 +446,7 @@ function numberOption(
             type='number'
             label={name}
             variant='outlined'
-            value={value || ''}
+            value={isNaN(value) ? '' : value}
             onChange={(e) => setValue(+e.target.value)}
         />
     );
