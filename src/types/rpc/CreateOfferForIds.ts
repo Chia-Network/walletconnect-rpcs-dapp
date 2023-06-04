@@ -1,3 +1,5 @@
+import { Trade } from '../Trade';
+
 export interface CreateOfferForIdsRequest {
     walletIdsAndAmounts: any;
     driverDict: any;
@@ -5,4 +7,7 @@ export interface CreateOfferForIdsRequest {
     disableJSONFormatting?: boolean;
 }
 
-export interface CreateOfferForIdsResponse {}
+export interface CreateOfferForIdsResponse {
+    offer: string;
+    tradeRecord: Trade;
+}
