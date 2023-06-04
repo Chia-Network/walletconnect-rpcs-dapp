@@ -1,3 +1,5 @@
+import { WalletType } from '../WalletType';
+
 export interface CreateNewDidWalletRequest {
     amount: number;
     fee: number;
@@ -5,4 +7,9 @@ export interface CreateNewDidWalletRequest {
     numOfBackupIdsNeeded: number;
 }
 
-export interface CreateNewDidWalletResponse {}
+export interface CreateNewDidWalletResponse {
+    myDid: string;
+    type: WalletType.DecentralizedId;
+    walletId: number;
+    success: true;
+}

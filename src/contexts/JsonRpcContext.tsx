@@ -293,7 +293,7 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
 
     async function getAllOffers(data: GetAllOffersRequest) {
         return await request<GetAllOffersResponse>(
-            ChiaMethod.VerifySignature,
+            ChiaMethod.GetAllOffers,
             data
         );
     }

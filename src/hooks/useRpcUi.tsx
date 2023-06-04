@@ -18,7 +18,7 @@ export function useRpcUi() {
     const [fee, setFee] = useState(0);
     const [number, setNumber] = useState(50);
     const [startIndex, setStartIndex] = useState(0);
-    const [endIndex, setEndIndex] = useState(0);
+    const [endIndex, setEndIndex] = useState(50);
     const [backupDidsNeeded, setBackupDidsNeeded] = useState(0);
 
     const [name, setName] = useState('');
@@ -180,6 +180,7 @@ export function useRpcUi() {
         chia_getAllOffers: [
             numberOption('Start Index', startIndex, setStartIndex),
             numberOption('End Index', endIndex, setEndIndex),
+            stringOption('Sort Key', sortKey, setSortKey),
             booleanOption(
                 'Include My Offers',
                 includeMyOffers,
@@ -191,7 +192,6 @@ export function useRpcUi() {
                 setIncludeTakenOffers
             ),
             booleanOption('Reverse', reverse, setReverse),
-            stringOption('Sort Key', sortKey, setSortKey),
             submitButton('Get All Offers', () =>
                 rpc.getAllOffers({
                     start: startIndex || undefined,
@@ -207,18 +207,18 @@ export function useRpcUi() {
             submitButton('Get Offers Count', () => rpc.getOffersCount({})),
         ],
         chia_createOfferForIds: [
-            booleanOption(
-                'Disable JSON Formatting',
-                disableJsonFormatting,
-                setDisableJsonFormatting
-            ),
-            booleanOption('Validate Only', validateOnly, setValidateOnly),
             stringOption(
                 'Wallet Ids And Amounts',
                 walletIdsAndAmounts,
                 setWalletIdsAndAmounts
             ),
             stringOption('Driver Dict', driverDict, setDriverDict),
+            booleanOption(
+                'Disable JSON Formatting',
+                disableJsonFormatting,
+                setDisableJsonFormatting
+            ),
+            booleanOption('Validate Only', validateOnly, setValidateOnly),
             submitButton('Create Offer For Ids', () =>
                 rpc.createOfferForIds({
                     disableJSONFormatting: disableJsonFormatting,
@@ -232,8 +232,8 @@ export function useRpcUi() {
         ],
         chia_cancelOffer: [
             numberOption('Fee', fee, setFee),
-            booleanOption('Secure', secure, setSecure),
             stringOption('Trade Id', tradeId, setTradeId),
+            booleanOption('Secure', secure, setSecure),
             submitButton('Cancel Offer', () =>
                 rpc.cancelOffer({
                     fee,

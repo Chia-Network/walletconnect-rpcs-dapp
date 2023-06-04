@@ -4,4 +4,6 @@ export interface CancelOfferRequest {
     fee: number;
 }
 
-export interface CancelOfferResponse {}
+export interface CancelOfferResponse {
+    success: true;
+}

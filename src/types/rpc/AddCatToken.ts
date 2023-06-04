@@ -3,4 +3,4 @@ export interface AddCatTokenRequest {
     name: string;
 }
 
-export interface AddCatTokenResponse {}
+export type AddCatTokenResponse = number;

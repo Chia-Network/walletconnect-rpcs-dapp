@@ -29,15 +29,22 @@ export default function Home() {
     const onConnect = () => {
         if (!client) throw new Error('WalletConnect is not initialized.');
 
-        if (pairings.length) console.log('Pairing Modal TODO', pairings);
-        else connect();
+        if (pairings.length === 1) {
+            connect({ topic: pairings[0].topic });
+        } else if (pairings.length) {
+            console.log('The pairing modal is not implemented.', pairings);
+        } else {
+            connect();
+        }
     };
 
     return (
         <Box sx={styles.container}>
             {!session ? (
-                <>
-                    <Typography variant='body1'>
+                <Box sx={styles.welcome}>
+                    <Typography variant='h5'>WalletConnect Example</Typography>
+
+                    <Typography variant='body1' mt={2}>
                         Before you can test out the WalletConnect commands, you
                         will need to link the Chia wallet to this site. You can
                         download the latest version of the wallet on the{' '}
@@ -63,7 +70,19 @@ export default function Home() {
                     >
                         Link Wallet
                     </Button>
-                </>
+
+                    <Button
+                        fullWidth
+                        variant='outlined'
+                        color='error'
+                        onClick={() => {
+                            localStorage.clear();
+                            window.location.href = '';
+                        }}
+                    >
+                        Reset Storage
+                    </Button>
+                </Box>
             ) : (
                 <>
                     <FormControl fullWidth sx={{ mt: 2 }}>
@@ -148,6 +167,11 @@ export default function Home() {
 }
 
 const styles: Record<string, SxProps> = {
+    welcome: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '12px',
+    },
     container: {
         paddingTop: '60px',
         width: { xs: '340px', md: '460px', lg: '540px' },

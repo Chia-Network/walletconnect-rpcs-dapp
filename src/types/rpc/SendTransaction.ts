@@ -6,7 +6,7 @@ export interface SendTransactionRequest {
     address: string;
     walletId?: number;
     waitForConfirmation?: boolean;
-    memos?: string[]; // untested
+    memos?: string[];
 }
 
 export interface SendTransactionResponse {

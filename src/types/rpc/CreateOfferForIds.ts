@@ -1,4 +1,3 @@
-// Fix
 export interface CreateOfferForIdsRequest {
     walletIdsAndAmounts: any;
     driverDict: any;
