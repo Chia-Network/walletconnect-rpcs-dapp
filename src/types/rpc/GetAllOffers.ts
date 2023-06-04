@@ -1,3 +1,5 @@
+import { Trade } from '../Trade';
+
 export interface GetAllOffersRequest {
     start?: number;
     end?: number;
@@ -7,4 +9,4 @@ export interface GetAllOffersRequest {
     includeTakenOffers?: boolean;
 }
 
-export interface GetAllOffersResponse {}
+export type GetAllOffersResponse = Trade[];

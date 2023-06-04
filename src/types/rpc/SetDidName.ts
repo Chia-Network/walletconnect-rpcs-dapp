@@ -3,4 +3,7 @@ export interface SetDidNameRequest {
     name: string;
 }
 
-export interface SetDidNameResponse {}
+export interface SetDidNameResponse {
+    walletId: number;
+    success: true;
+}

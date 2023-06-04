@@ -1,3 +1,5 @@
+import { Transaction } from '../Transaction';
+
 export interface SpendCatRequest {
     walletId: number;
     address: string;
@@ -7,4 +9,8 @@ export interface SpendCatRequest {
     waitForConfirmation?: boolean;
 }
 
-export interface SpendCatResponse {}
+export interface SpendCatResponse {
+    transaction: Transaction;
+    transactionId: string;
+    success: true;
+}

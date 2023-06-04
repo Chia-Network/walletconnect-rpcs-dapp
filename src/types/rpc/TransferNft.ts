@@ -9,7 +9,7 @@ export interface TransferNftRequest {
 }
 
 export interface TransferNftResponse {
-    walletId: number;
+    walletId: number | number[];
     spendBundle: SpendBundle;
     txNum?: number;
 }

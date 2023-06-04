@@ -1,13 +1,12 @@
+import { Peer } from './Peer';
 import { SpendBundle } from './SpendBundle';
 import { TransactionType } from './TransactionType';
 
-interface AdditionsOrRemovals {
+export interface AdditionsOrRemovals {
     amount: number;
     parentCoinInfo: string;
     puzzleHash: string;
 }
-
-type Peer = [string, number, string | null];
 
 export interface Transaction {
     additions: AdditionsOrRemovals[];

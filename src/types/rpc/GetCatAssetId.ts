@@ -2,4 +2,4 @@ export interface GetCatAssetIdRequest {
     walletId: number;
 }
 
-export interface GetCatAssetIdResponse {}
+export type GetCatAssetIdResponse = string;

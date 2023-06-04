@@ -352,7 +352,7 @@ export function useRpcUi() {
                 })
             ),
         ],
-        chia_getNftsCount: [
+        chia_getNFTsCount: [
             stringOption('Wallet Ids', walletIds, setWalletIds),
             submitButton('Get NFTs Count', () =>
                 rpc.getNftsCount({

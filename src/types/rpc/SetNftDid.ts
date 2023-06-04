@@ -1,3 +1,5 @@
+import { SpendBundle } from '../SpendBundle';
+
 export interface SetNftDidRequest {
     walletId: number;
     nftLauncherId: string;
@@ -6,4 +8,8 @@ export interface SetNftDidRequest {
     fee: number;
 }
 
-export interface SetNftDidResponse {}
+export interface SetNftDidResponse {
+    spendBundle: SpendBundle;
+    walletId: number;
+    success: true;
+}

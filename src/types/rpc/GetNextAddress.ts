@@ -3,4 +3,4 @@ export interface GetNextAddressRequest {
     newAddress?: boolean;
 }
 
-export interface GetNextAddressResponse {}
+export type GetNextAddressResponse = string;

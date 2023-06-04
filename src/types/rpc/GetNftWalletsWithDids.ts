@@ -1,3 +1,9 @@
+export interface NftWalletWithDids {
+    didId: string;
+    didWalletId: number;
+    walletId: number;
+}
+
 export interface GetNftWalletsWithDidsRequest {}
 
-export interface GetNftWalletsWithDidsResponse {}
+export type GetNftWalletsWithDidsResponse = NftWalletWithDids[];
