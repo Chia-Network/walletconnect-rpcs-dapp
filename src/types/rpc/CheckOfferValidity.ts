@@ -2,4 +2,7 @@ export interface CheckOfferValidityRequest {
     offerData: string;
 }
 
-export interface CheckOfferValidityResponse {}
+export interface CheckOfferValidityResponse {
+    id: string;
+    valid: boolean;
+}

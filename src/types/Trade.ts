@@ -20,35 +20,37 @@ export interface Trade {
     sent: number;
     sentTo: Peer[];
     status: string;
-    summary: {
-        fees: number;
-        infos: Record<
-            string,
-            {
-                also: {
-                    also: {
-                        owner: string;
-                        transferProgram: {
-                            launcherId: string;
-                            royaltyAddress: string;
-                            royaltyPercentage: string;
-                            type: 'royalty transfer program';
-                        };
-                        type: 'ownership';
-                    };
-                    metadata: string;
-                    type: 'metadata';
-                    updaterHash: string;
-                };
-                launcherId: string;
-                launcherPh: string;
-                type: 'singleton';
-            }
-        >;
-        offered: Record<string, number>;
-        requested: Record<string, number>;
-    };
+    summary: Summary;
     takenOffer: string | null;
     tradeId: string;
     _offerData: string;
+}
+
+export interface Summary {
+    fees: number;
+    infos: Record<
+        string,
+        {
+            also: {
+                also: {
+                    owner: string;
+                    transferProgram: {
+                        launcherId: string;
+                        royaltyAddress: string;
+                        royaltyPercentage: string;
+                        type: 'royalty transfer program';
+                    };
+                    type: 'ownership';
+                };
+                metadata: string;
+                type: 'metadata';
+                updaterHash: string;
+            };
+            launcherId: string;
+            launcherPh: string;
+            type: 'singleton';
+        }
+    >;
+    offered: Record<string, number>;
+    requested: Record<string, number>;
 }
