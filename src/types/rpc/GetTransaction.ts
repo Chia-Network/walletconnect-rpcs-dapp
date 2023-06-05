@@ -1,4 +1,4 @@
-import { Transaction } from '../Transaction';
+import { Transaction } from '../TransactionRecord';
 
 export interface GetTransactionRequest {
     transactionId: string;

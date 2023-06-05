@@ -1,4 +1,4 @@
-import { Trade } from '../Trade';
+import { Trade } from '../TradeRecord';
 
 export interface GetAllOffersRequest {
     start?: number;
