@@ -1,4 +1,4 @@
-import { Transaction } from '../TransactionRecord';
+import { TransactionRecord } from '../TransactionRecord';
 
 export interface SendTransactionRequest {
     amount: number;
@@ -11,6 +11,6 @@ export interface SendTransactionRequest {
 
 export interface SendTransactionResponse {
     success: true;
-    transaction: Transaction;
+    transaction: TransactionRecord;
     transactionId: string;
 }

@@ -1,4 +1,4 @@
-import { Trade } from '../TradeRecord';
+import { TradeRecord } from '../TradeRecord';
 
 export interface GetAllOffersRequest {
     start?: number;
@@ -9,4 +9,4 @@ export interface GetAllOffersRequest {
     includeTakenOffers?: boolean;
 }
 
-export type GetAllOffersResponse = Trade[];
+export type GetAllOffersResponse = TradeRecord[];

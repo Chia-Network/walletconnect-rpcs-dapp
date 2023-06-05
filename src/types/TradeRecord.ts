@@ -10,7 +10,7 @@ export enum TradeStatus {
     Failed = 'FAILED',
 }
 
-export interface Trade {
+export interface TradeRecord {
     acceptedAtTime: number | null;
     coinsOfInterest: Coin[];
     confirmedAtIndex: number;
@@ -20,13 +20,13 @@ export interface Trade {
     sent: number;
     sentTo: Peer[];
     status: string;
-    summary: Summary;
+    summary: TradeSummary;
     takenOffer: string | null;
     tradeId: string;
     _offerData: string;
 }
 
-export interface Summary {
+export interface TradeSummary {
     fees: number;
     infos: Record<
         string,

@@ -1,4 +1,4 @@
-import { Trade } from '../TradeRecord';
+import { TradeRecord } from '../TradeRecord';
 
 export interface CreateOfferForIdsRequest {
     walletIdsAndAmounts: any;
@@ -9,5 +9,5 @@ export interface CreateOfferForIdsRequest {
 
 export interface CreateOfferForIdsResponse {
     offer: string;
-    tradeRecord: Trade;
+    tradeRecord: TradeRecord;
 }

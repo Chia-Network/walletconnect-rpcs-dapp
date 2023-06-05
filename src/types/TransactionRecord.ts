@@ -8,7 +8,7 @@ export interface AdditionsOrRemovals {
     puzzleHash: string;
 }
 
-export interface Transaction {
+export interface TransactionRecord {
     additions: AdditionsOrRemovals[];
     amount: number;
     confirmed: boolean;

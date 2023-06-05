@@ -1,7 +1,7 @@
-import { Transaction } from '../TransactionRecord';
+import { TransactionRecord } from '../TransactionRecord';
 
 export interface GetTransactionRequest {
     transactionId: string;
 }
 
-export type GetTransactionResponse = Transaction;
+export type GetTransactionResponse = TransactionRecord;

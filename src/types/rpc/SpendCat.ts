@@ -1,4 +1,4 @@
-import { Transaction } from '../TransactionRecord';
+import { TransactionRecord } from '../TransactionRecord';
 
 export interface SpendCatRequest {
     walletId: number;
@@ -10,7 +10,7 @@ export interface SpendCatRequest {
 }
 
 export interface SpendCatResponse {
-    transaction: Transaction;
+    transaction: TransactionRecord;
     transactionId: string;
     success: true;
 }

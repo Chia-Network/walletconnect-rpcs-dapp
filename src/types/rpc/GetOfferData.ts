@@ -1,4 +1,4 @@
-import { Trade } from '../TradeRecord';
+import { TradeRecord } from '../TradeRecord';
 
 export interface GetOfferDataRequest {
     offerId: string;
@@ -6,6 +6,6 @@ export interface GetOfferDataRequest {
 
 export interface GetOfferDataResponse {
     offer: string;
-    tradeRecord: Trade;
+    tradeRecord: TradeRecord;
     success: true;
 }
