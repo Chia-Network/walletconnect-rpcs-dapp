@@ -1,15 +1,10 @@
+import { Coin } from './Coin';
 import { Peer } from './Peer';
 import { SpendBundle } from './SpendBundle';
 import { TransactionType } from './TransactionType';
 
-export interface AdditionsOrRemovals {
-    amount: number;
-    parentCoinInfo: string;
-    puzzleHash: string;
-}
-
 export interface TransactionRecord {
-    additions: AdditionsOrRemovals[];
+    additions: Coin[];
     amount: number;
     confirmed: boolean;
     confirmedAtHeight: number;
@@ -17,7 +12,7 @@ export interface TransactionRecord {
     feeAmount: number;
     memos: Record<string, string>;
     name: string;
-    removals: AdditionsOrRemovals[];
+    removals: Coin[];
     sent: number;
     sentTo: Peer[];
     spendBundle: SpendBundle | null;
