@@ -1,7 +1,7 @@
 import { TradeRecord } from '../TradeRecord';
 
 export interface CreateOfferForIdsRequest {
-    walletIdsAndAmounts: any;
+    offer: any;
     driverDict: any;
     validateOnly?: boolean;
     disableJSONFormatting?: boolean;

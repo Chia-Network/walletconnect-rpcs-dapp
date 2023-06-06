@@ -31,7 +31,7 @@ export function useRpcUi() {
     const [sortKey, setSortKey] = useState('');
     const [offerData, setOfferData] = useState('');
 
-    const [walletIdsAndAmounts, setWalletIdsAndAmounts] = useState('');
+    const [offer, setOffer] = useState('');
     const [driverDict, setDriverDict] = useState('');
 
     const [walletId, setWalletId] = useState(0);
@@ -207,11 +207,7 @@ export function useRpcUi() {
             submitButton('Get Offers Count', () => rpc.getOffersCount({})),
         ],
         chia_createOfferForIds: [
-            stringOption(
-                'Wallet Ids And Amounts',
-                walletIdsAndAmounts,
-                setWalletIdsAndAmounts
-            ),
+            stringOption('Offer', offer, setOffer),
             stringOption('Driver Dict', driverDict, setDriverDict),
             booleanOption(
                 'Disable JSON Formatting',
@@ -223,9 +219,7 @@ export function useRpcUi() {
                 rpc.createOfferForIds({
                     disableJSONFormatting: disableJsonFormatting,
                     validateOnly,
-                    walletIdsAndAmounts: JSON.parse(
-                        walletIdsAndAmounts || '{}'
-                    ),
+                    offer: JSON.parse(offer || '{}'),
                     driverDict: JSON.parse(driverDict || '{}'),
                 })
             ),
