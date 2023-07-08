@@ -108,6 +108,10 @@ import {
     VerifySignatureRequest,
     VerifySignatureResponse,
 } from '../types/rpc/VerifySignature';
+import {
+    GetWalletAddressesRequest,
+    GetWalletAddressesResponse,
+} from '../types/rpc/GetWalletAddresses';
 import { useWalletConnect } from './WalletConnectContext';
 
 interface JsonRpc {
@@ -141,6 +145,9 @@ interface JsonRpc {
     getSyncStatus: (
         data: GetSyncStatusRequest
     ) => Promise<GetSyncStatusResponse>;
+    getWalletAddresses: (
+        data: GetWalletAddressesRequest
+    ) => Promise<GetWalletAddressesResponse>;
 
     // Offers
     getAllOffers: (data: GetAllOffersRequest) => Promise<GetAllOffersResponse>;
@@ -285,6 +292,13 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
     async function getSyncStatus(data: GetSyncStatusRequest) {
         return await request<GetSyncStatusResponse>(
             ChiaMethod.GetSyncStatus,
+            data
+        );
+    }
+
+    async function getWalletAddresses(data: GetWalletAddressesRequest) {
+        return await request<GetWalletAddressesResponse>(
+            ChiaMethod.GetWalletAddresses,
             data
         );
     }
@@ -438,6 +452,7 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
                 verifySignature,
                 getNextAddress,
                 getSyncStatus,
+                getWalletAddresses,
 
                 // Offers
                 getAllOffers,

@@ -14,9 +14,12 @@ export function useRpcUi() {
     const [responseData, setResponseData] = useState<any>(null);
 
     const [fingerprint, setFingerprint] = useState(0);
+    const [fingerprints, setFingerprints] = useState<string>('');
     const [amount, setAmount] = useState(0);
+    const [count, setCount] = useState(1);
     const [fee, setFee] = useState(0);
     const [number, setNumber] = useState(50);
+    const [index, setIndex] = useState(0);
     const [startIndex, setStartIndex] = useState(0);
     const [endIndex, setEndIndex] = useState(50);
     const [backupDidsNeeded, setBackupDidsNeeded] = useState(0);
@@ -55,6 +58,7 @@ export function useRpcUi() {
     const [disableJsonFormatting, setDisableJsonFormatting] = useState(false);
     const [validateOnly, setValidateOnly] = useState(false);
     const [secure, setSecure] = useState(false);
+    const [nonObserverDerivation, setNonObserverDerivation] = useState(false);
 
     function handlePromise(promise: Promise<any>) {
         promise
@@ -174,6 +178,20 @@ export function useRpcUi() {
         ],
         chia_getSyncStatus: [
             submitButton('Get Sync Status', () => rpc.getSyncStatus({})),
+        ],
+        chia_getWalletAddresses: [
+            stringOption('Fingerprints', fingerprints, setFingerprints),
+            numberOption('Index', index, setIndex),
+            numberOption('Count', count, setCount),
+            booleanOption('Non-Observer Derivation', nonObserverDerivation, setNonObserverDerivation),
+            submitButton('Get Wallet Addresses', () =>
+                rpc.getWalletAddresses({
+                    fingerprints: fingerprints.trim().length ? fingerprints.split(',').map((fingerprint) => +fingerprint.trim()) : undefined,
+                    index,
+                    count,
+                    nonObserverDerivation,
+                })
+            ),
         ],
 
         // Offers
