@@ -34,6 +34,19 @@ export function useRpcUi() {
     const [offer, setOffer] = useState('');
     const [driverDict, setDriverDict] = useState('');
 
+    const [royaltyAddress, setRoyaltyAddress] = useState('');
+    const [royaltyPercentage, setRoyaltyPercentage] = useState(0);
+    const [targetAddress, setTargetAddress] = useState('');
+    const [uris, setUris] = useState('');
+    const [hash, setHash] = useState('');
+    const [metaUris, setMetaUris] = useState('');
+    const [metaHash, setMetaHash] = useState('');
+    const [licenseUris, setLicenseUris] = useState('');
+    const [licenseHash, setLicenseHash] = useState('');
+    const [editionNumber, setEditionNumber] = useState(0);
+    const [editionCount, setEditionCount] = useState(0);
+    const [didId, setDidId] = useState('');
+
     const [walletId, setWalletId] = useState(0);
     const [transactionId, setTransactionId] = useState('');
     const [coinId, setCoinId] = useState('');
@@ -329,6 +342,46 @@ export function useRpcUi() {
         chia_getNFTInfo: [
             stringOption('Coin Id', coinId, setCoinId),
             submitButton('Get NFT Info', () => rpc.getNftInfo({ coinId })),
+        ],
+        chia_mintNFT: [
+            numberOption('Wallet Id', walletId, setWalletId),
+            stringOption('Royalty Address', royaltyAddress, setRoyaltyAddress),
+            numberOption('Royalty Percentage', royaltyPercentage, setRoyaltyPercentage),
+            stringOption('Target Address', targetAddress, setTargetAddress),
+            stringOption('URIs', uris, setUris),
+            stringOption('Hash', hash, setHash),
+            stringOption('Meta URIs', metaUris, setMetaUris),
+            stringOption('Meta Hash', metaHash, setMetaHash),
+            stringOption('License URIs', licenseUris, setLicenseUris),
+            stringOption('License Hash', licenseHash, setLicenseHash),
+            numberOption('Edition Number', editionNumber, setEditionNumber),
+            numberOption('Edition Count', editionCount, setEditionCount),
+            stringOption('DID ID', didId, setDidId),
+            numberOption('Fee', fee, setFee),
+            submitButton('Mint NFT', () =>
+                rpc.mintNft({
+                    walletId,
+                    royaltyAddress,
+                    royaltyPercentage,
+                    targetAddress,
+                    uris: uris.trim().length
+                        ? uris.split(',').map((id) => id.trim())
+                        : [],
+                    hash,
+                    metaUris: metaUris.trim().length
+                        ? metaUris.split(',').map((id) => id.trim())
+                        : [],
+                    metaHash,
+                    licenseUris: licenseUris.trim().length
+                        ? licenseUris.split(',').map((id) => id.trim())
+                        : [],
+                    licenseHash,
+                    editionNumber,
+                    editionCount,
+                    didId,
+                    fee,
+                })
+            ),
         ],
         chia_transferNFT: [
             numberOption('Wallet Id', walletId, setWalletId),

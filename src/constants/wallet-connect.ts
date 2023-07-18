@@ -29,6 +29,7 @@ export enum ChiaMethod {
     AddCatToken = 'chia_addCATToken',
     GetNfts = 'chia_getNFTs',
     GetNftInfo = 'chia_getNFTInfo',
+    MintNft = 'chia_mintNFT',
     TransferNft = 'chia_transferNFT',
     GetNftsCount = 'chia_getNFTsCount',
     CreateNewDidWallet = 'chia_createNewDIDWallet',
