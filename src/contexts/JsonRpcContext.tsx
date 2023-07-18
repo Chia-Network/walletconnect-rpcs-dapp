@@ -44,8 +44,18 @@ import {
     GetNextAddressRequest,
     GetNextAddressResponse,
 } from '../types/rpc/GetNextAddress';
-import { GetNftInfoRequest, GetNftInfoResponse } from '../types/rpc/GetNftInfo';
-import { GetNftsRequest, GetNftsResponse } from '../types/rpc/GetNfts';
+import {
+    GetNftInfoRequest,
+    GetNftInfoResponse,
+} from '../types/rpc/GetNftInfo';
+import {
+    GetNftsRequest,
+    GetNftsResponse,
+} from '../types/rpc/GetNfts';
+import {
+    MintNftRequest,
+    MintNftResponse,
+} from '../types/rpc/MintNft';
 import {
     GetNftsCountRequest,
     GetNftsCountResponse,
@@ -179,6 +189,7 @@ interface JsonRpc {
     // NFTs
     getNfts: (data: GetNftsRequest) => Promise<GetNftsResponse>;
     getNftInfo: (data: GetNftInfoRequest) => Promise<GetNftInfoResponse>;
+    mintNft: (data: mintNftRequest) => Promise<mintNftResponse>;
     transferNft: (data: TransferNftRequest) => Promise<TransferNftResponse>;
     getNftsCount: (data: GetNftsCountRequest) => Promise<GetNftsCountResponse>;
 
@@ -388,6 +399,10 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
         return await request<GetNftInfoResponse>(ChiaMethod.GetNftInfo, data);
     }
 
+    async function mintNft(data: MintNftRequest) {
+        return await request<MintNftResponse>(ChiaMethod.MintNft, data);
+    }
+
     async function transferNft(data: TransferNftRequest) {
         return await request<TransferNftResponse>(ChiaMethod.TransferNft, data);
     }
@@ -460,6 +475,7 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
                 // NFTs
                 getNfts,
                 getNftInfo,
+                mintNft,
                 transferNft,
                 getNftsCount,
 
