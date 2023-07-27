@@ -44,18 +44,8 @@ import {
     GetNextAddressRequest,
     GetNextAddressResponse,
 } from '../types/rpc/GetNextAddress';
-import {
-    GetNftInfoRequest,
-    GetNftInfoResponse,
-} from '../types/rpc/GetNftInfo';
-import {
-    GetNftsRequest,
-    GetNftsResponse,
-} from '../types/rpc/GetNfts';
-import {
-    MintNftRequest,
-    MintNftResponse,
-} from '../types/rpc/MintNft';
+import { GetNftInfoRequest, GetNftInfoResponse } from '../types/rpc/GetNftInfo';
+import { GetNftsRequest, GetNftsResponse } from '../types/rpc/GetNfts';
 import {
     GetNftsCountRequest,
     GetNftsCountResponse,
@@ -94,6 +84,7 @@ import {
 } from '../types/rpc/GetWalletBalance';
 import { GetWalletsRequest, GetWalletsResponse } from '../types/rpc/GetWallets';
 import { LogInRequest, LogInResponse } from '../types/rpc/LogIn';
+import { MintNftRequest, MintNftResponse } from '../types/rpc/MintNft';
 import {
     SendTransactionRequest,
     SendTransactionResponse,
@@ -189,7 +180,7 @@ interface JsonRpc {
     // NFTs
     getNfts: (data: GetNftsRequest) => Promise<GetNftsResponse>;
     getNftInfo: (data: GetNftInfoRequest) => Promise<GetNftInfoResponse>;
-    mintNft: (data: mintNftRequest) => Promise<mintNftResponse>;
+    mintNft: (data: MintNftRequest) => Promise<MintNftResponse>;
     transferNft: (data: TransferNftRequest) => Promise<TransferNftResponse>;
     getNftsCount: (data: GetNftsCountRequest) => Promise<GetNftsCountResponse>;
 
