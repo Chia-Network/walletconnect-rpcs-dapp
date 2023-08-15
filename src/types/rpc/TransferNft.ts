@@ -2,8 +2,7 @@ import { SpendBundle } from '../SpendBundle';
 
 export interface TransferNftRequest {
     walletId: number;
-    nftCoinId: string;
-    launcherId: string;
+    nftCoinIds: string[];
     targetAddress: string;
     fee: number;
 }

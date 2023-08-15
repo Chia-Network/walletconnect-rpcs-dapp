@@ -364,7 +364,11 @@ export function useRpcUi() {
         chia_mintNFT: [
             numberOption('Wallet Id', walletId, setWalletId),
             stringOption('Royalty Address', royaltyAddress, setRoyaltyAddress),
-            numberOption('Royalty Percentage', royaltyPercentage, setRoyaltyPercentage),
+            numberOption(
+                'Royalty Percentage',
+                royaltyPercentage,
+                setRoyaltyPercentage
+            ),
             stringOption('Target Address', targetAddress, setTargetAddress),
             stringOption('URIs', uris, setUris),
             stringOption('Hash', hash, setHash),
@@ -403,15 +407,15 @@ export function useRpcUi() {
         ],
         chia_transferNFT: [
             numberOption('Wallet Id', walletId, setWalletId),
-            stringOption('Coin Id', coinId, setCoinId),
-            stringOption('Launcher Id', launcherId, setLauncherId),
+            stringOption('NFT Coin Ids', nftCoinIds, setNftCoinIds),
             stringOption('Address', address, setAddress),
             numberOption('Fee', fee, setFee),
             submitButton('Transfer NFT', () =>
                 rpc.transferNft({
                     walletId,
-                    nftCoinId: coinId,
-                    launcherId,
+                    nftCoinIds: nftCoinIds.trim().length
+                        ? nftCoinIds.split(',').map((id) => id.trim())
+                        : [],
                     targetAddress: address,
                     fee,
                 })
