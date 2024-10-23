@@ -1,7 +1,7 @@
 import Client from '@walletconnect/sign-client';
 import { PairingTypes, SessionTypes } from '@walletconnect/types';
 import { getSdkError } from '@walletconnect/utils';
-import { Web3Modal } from '@web3modal/standalone';
+import { WalletConnectModal } from '@walletconnect/modal';
 
 import {
     createContext,
@@ -16,7 +16,7 @@ import { METADATA, REQUIRED_NAMESPACES } from '../constants/wallet-connect';
 
 interface WalletConnect {
     client?: Client;
-    web3Modal?: Web3Modal;
+    web3Modal?: WalletConnectModal;
     session?: SessionTypes.Struct;
     chainId: string;
     fingerprint?: string;
@@ -43,7 +43,7 @@ export function WalletConnectProvider({
     chainId,
     children,
 }: WalletConnectProviderProps) {
-    const [web3Modal, setWeb3Modal] = useState<Web3Modal>();
+    const [web3Modal, setWeb3Modal] = useState<WalletConnectModal>();
     const [client, setClient] = useState<Client>();
     const [pairings, setPairings] = useState<PairingTypes.Struct[]>([]);
     const [session, setSession] = useState<SessionTypes.Struct>();
@@ -157,10 +157,9 @@ export function WalletConnectProvider({
                 metadata: METADATA,
             });
 
-            const web3Modal = new Web3Modal({
+            const web3Modal = new WalletConnectModal({
                 projectId,
-                standaloneChains: [chainId],
-                walletConnectVersion: 2,
+                chains: [chainId],
             });
 
             setClient(client);

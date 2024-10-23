@@ -298,13 +298,6 @@ export function useRpcUi() {
         ],
 
         // CATs
-        chia_createNewCATWallet: [
-            numberOption('Amount', amount, setAmount),
-            numberOption('Fee', fee, setFee),
-            submitButton('Create New CAT Wallet', () =>
-                rpc.createNewCatWallet({ amount, fee })
-            ),
-        ],
         chia_getCATWalletInfo: [
             stringOption('Asset Id', assetId, setAssetId),
             submitButton('Get CAT Wallet Info', () =>
