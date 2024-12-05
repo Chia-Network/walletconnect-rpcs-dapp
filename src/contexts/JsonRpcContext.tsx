@@ -13,10 +13,6 @@ import {
     CheckOfferValidityResponse,
 } from '../types/rpc/CheckOfferValidity';
 import {
-    CreateNewCatWalletRequest,
-    CreateNewCatWalletResponse,
-} from '../types/rpc/CreateNewCatWallet';
-import {
     CreateNewDidWalletRequest,
     CreateNewDidWalletResponse,
 } from '../types/rpc/CreateNewDidWallet';
@@ -172,9 +168,6 @@ interface JsonRpc {
     ) => Promise<GetOfferRecordResponse>;
 
     // CATs
-    createNewCatWallet: (
-        data: CreateNewCatWalletRequest
-    ) => Promise<CreateNewCatWalletResponse>;
     getCatWalletInfo: (
         data: GetCatWalletInfoRequest
     ) => Promise<GetCatWalletInfoResponse>;
@@ -365,14 +358,6 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
     }
 
     // CATs
-
-    async function createNewCatWallet(data: CreateNewCatWalletRequest) {
-        return await request<CreateNewCatWalletResponse>(
-            ChiaMethod.CreateNewCatWallet,
-            data
-        );
-    }
-
     async function getCatWalletInfo(data: GetCatWalletInfoRequest) {
         return await request<GetCatWalletInfoResponse>(
             ChiaMethod.GetCatWalletInfo,
@@ -472,7 +457,6 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
                 getOfferRecord,
 
                 // CATs
-                createNewCatWallet,
                 getCatWalletInfo,
                 getCatAssetId,
                 spendCat,

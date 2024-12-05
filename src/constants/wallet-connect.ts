@@ -22,7 +22,6 @@ export enum ChiaMethod {
     GetOfferSummary = 'chia_getOfferSummary',
     GetOfferData = 'chia_getOfferData',
     GetOfferRecord = 'chia_getOfferRecord',
-    CreateNewCatWallet = 'chia_createNewCATWallet',
     GetCatWalletInfo = 'chia_getCATWalletInfo',
     GetCatAssetId = 'chia_getCATAssetId',
     SpendCat = 'chia_spendCAT',
