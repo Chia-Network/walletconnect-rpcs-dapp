@@ -23,7 +23,7 @@ Please be aware that this repository is not actively maintained and does not rec
 2. Address Security Issues: Conduct thorough assessments for any potential security vulnerabilities present in outdated dependencies or libraries.
 
 ### Licensing
-This code is licensed under the Apache License 2.0, which grants you the freedom to use, modify, and distribute the code with proper attribution. Please review the license for further details on its terms and conditions.
+This code is licensed under the [Apache License 2.0](./LICENSE), which grants you the freedom to use, modify, and distribute the code with proper attribution. Please review the license for further details on its terms and conditions.
 By using this repository, you signify that you have read, understood, and agree to this disclaimer. If you do not agree with these terms, please refrain from using the code.
 
 
