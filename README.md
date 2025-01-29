@@ -13,7 +13,6 @@ npm run dev
 
 Note that the `.env` file contains `VITE_PROJECT_ID` and `VITE_CHAIN_ID` constants. The former is from WalletConnect and identifies your app inside of the wallet. The latter is either `chia:testnet` or `chia:mainnet`, and must match what your wallet is on.
 
-
 ## Important Notice
 This repository is intended for demonstration purposes only. The primary goal of this code is to provide examples of how to integrate with WalletConnect. It is not designed to be run as-is or serve as a production-ready solution.
 
