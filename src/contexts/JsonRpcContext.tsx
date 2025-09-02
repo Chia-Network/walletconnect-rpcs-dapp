@@ -202,7 +202,11 @@ interface JsonRpc {
     ) => Promise<GetNftWalletsWithDidsResponse>;
 }
 
-export const JsonRpcContext = createContext<JsonRpc>({} as JsonRpc);
+// Create context with proper typing for Fast Refresh compatibility
+const JsonRpcContext = createContext<JsonRpc | null>(null);
+
+// Export the context
+export { JsonRpcContext };
 
 export function JsonRpcProvider({ children }: PropsWithChildren) {
     const { client, session, chainId, fingerprint } = useWalletConnect();

@@ -2,6 +2,14 @@
 
 This is a dApp for testing the Chia wallet's WalletConnect commands.
 
+## Features
+
+- **Clean WalletConnect Integration**: Uses `@walletconnect/sign-client` directly without deprecated Web3Modal
+- **QR Code Connection**: Custom QR code modal for wallet connection
+- **Comprehensive RPC Testing**: Test 30+ Chia blockchain operations
+- **Type-Safe**: Full TypeScript support with strongly-typed RPC methods
+- **Modern UI**: Material-UI based interface with real-time response display
+
 ## Setup
 
 Run the following commands to start the dApp:
