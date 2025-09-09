@@ -14,11 +14,12 @@ import { Box } from '@mui/system';
 import { cloneElement, useState } from 'react';
 import { LightAsync as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { github } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { QRCodeModal } from './components/QRCodeModal';
 import { useWalletConnect } from './contexts/WalletConnectContext';
 import { useRpcUi } from './hooks/useRpcUi';
 
 export default function Home() {
-    const { client, session, pairings, connect, disconnect } =
+    const { client, session, pairings, connect, disconnect, connectionUri, showQRModal, setShowQRModal, isInitializing, fingerprint } =
         useWalletConnect();
 
     const [command, setCommand] = useState(0);
@@ -30,7 +31,7 @@ export default function Home() {
         if (!client) throw new Error('WalletConnect is not initialized.');
 
         if (pairings.length === 1) {
-            connect({ topic: pairings[0].topic });
+            connect();
         } else if (pairings.length) {
             console.log('The pairing modal is not implemented.', pairings);
         } else {
@@ -40,7 +41,30 @@ export default function Home() {
 
     return (
         <Box sx={styles.container}>
-            {!session ? (
+            <QRCodeModal 
+                open={showQRModal} 
+                uri={connectionUri} 
+                onClose={() => setShowQRModal(false)} 
+            />
+            
+            {isInitializing ? (
+                <Box sx={styles.welcome}>
+                    <Typography variant='h5'>Initializing WalletConnect...</Typography>
+                    <Typography variant='body1' mt={2}>
+                        Please wait while we set up the connection.
+                    </Typography>
+                </Box>
+            ) : !client ? (
+                <Box sx={styles.welcome}>
+                    <Typography variant='h5' color="error">WalletConnect Failed to Initialize</Typography>
+                    <Typography variant='body1' mt={2}>
+                        Please check your environment configuration and try refreshing the page.
+                    </Typography>
+                    <Typography variant='body2' mt={1} color="text.secondary">
+                        Make sure you have a .env file with VITE_PROJECT_ID, VITE_RELAY_URL, and VITE_CHAIN_ID.
+                    </Typography>
+                </Box>
+            ) : !session ? (
                 <Box sx={styles.welcome}>
                     <Typography variant='h5'>WalletConnect Example</Typography>
 
@@ -61,6 +85,27 @@ export default function Home() {
                         of the wallet. Click the button below to begin the
                         connection.
                     </Typography>
+
+                    {client && (
+                        <Typography variant='body2' sx={{ mt: 1, color: 'text.secondary' }}>
+                            Client Status: {client ? 'Ready' : 'Not Ready'} | 
+                            Sessions: {client?.session.length || 0} | 
+                            Pairings: {pairings.length} |
+                            Connected: {session ? 'Yes' : 'No'}
+                        </Typography>
+                    )}
+
+                    {session && (
+                        <Typography variant='body2' sx={{ mt: 1, color: 'success.main' }}>
+                            ✅ Connected to Chia wallet! Fingerprint: {fingerprint}
+                        </Typography>
+                    )}
+
+                    {!session && client && (
+                        <Typography variant='body2' sx={{ mt: 1, color: 'warning.main' }}>
+                            ⚠️ Ready to connect. Click "Link Wallet" to start.
+                        </Typography>
+                    )}
 
                     <Button
                         fullWidth
