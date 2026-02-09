@@ -35,6 +35,6 @@
         "eslint-plugin-react-hooks": "^4.6.0",
         "eslint-plugin-react-refresh": "^0.3.4",
         "typescript": "^5.0.2",
-        "vite": "^5.4.21"
+        "vite": "^7.3.1"
     }
 }
