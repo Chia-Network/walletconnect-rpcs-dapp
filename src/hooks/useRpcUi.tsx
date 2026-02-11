@@ -53,6 +53,10 @@ export function useRpcUi() {
     const [walletId, setWalletId] = useState(0);
     const [transactionId, setTransactionId] = useState('');
     const [coinId, setCoinId] = useState('');
+    const [coinNames, setCoinNames] = useState('');
+    const [startHeight, setStartHeight] = useState<number>(NaN);
+    const [endHeight, setEndHeight] = useState<number>(NaN);
+    const [includeSpentCoins, setIncludeSpentCoins] = useState(true);
     const [launcherId, setLauncherId] = useState('');
     const [tradeId, setTradeId] = useState('');
     const [offerId, setOfferId] = useState('');
@@ -112,6 +116,26 @@ export function useRpcUi() {
             submitButton('Get Transaction', () =>
                 rpc.getTransaction({ transactionId })
             ),
+        ],
+        chia_getCoinRecordsByNames: [
+            stringOption('Names (coin ids)', coinNames, setCoinNames),
+            numberOption('Start Height', startHeight, setStartHeight),
+            numberOption('End Height', endHeight, setEndHeight),
+            booleanOption(
+                'Include Spent Coins',
+                includeSpentCoins,
+                setIncludeSpentCoins
+            ),
+            submitButton('Get Coin Records By Names', () => {
+                const names = parseStringArrayInput(coinNames);
+
+                return rpc.getCoinRecordsByNames({
+                    names,
+                    startHeight: isNaN(startHeight) ? undefined : startHeight,
+                    endHeight: isNaN(endHeight) ? undefined : endHeight,
+                    includeSpentCoins,
+                });
+            }),
         ],
         chia_getWalletBalance: [
             numberOption('Wallet Id', walletId, setWalletId),
@@ -541,4 +565,24 @@ function booleanOption(
             />
         </FormGroup>
     );
+}
+
+function parseStringArrayInput(input: string): string[] {
+    const trimmed = input.trim();
+    if (!trimmed) return [];
+
+    // Allow JSON array input for convenience: ["0x...", "0x..."]
+    if (trimmed.startsWith('[')) {
+        const parsed = JSON.parse(trimmed);
+        if (!Array.isArray(parsed)) {
+            throw new Error('Names must be a JSON array or comma-separated list');
+        }
+        return parsed.map((v) => String(v).trim()).filter(Boolean);
+    }
+
+    // Default to comma-separated list
+    return trimmed
+        .split(',')
+        .map((v) => v.trim())
+        .filter(Boolean);
 }

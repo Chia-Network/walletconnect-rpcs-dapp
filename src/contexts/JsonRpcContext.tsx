@@ -79,6 +79,10 @@ import {
     GetTransactionResponse,
 } from '../types/rpc/GetTransaction';
 import {
+    GetCoinRecordsByNamesRequest,
+    GetCoinRecordsByNamesResponse,
+} from '../types/rpc/GetCoinRecordsByNames';
+import {
     GetWalletBalanceRequest,
     GetWalletBalanceResponse,
 } from '../types/rpc/GetWalletBalance';
@@ -122,6 +126,9 @@ interface JsonRpc {
     getTransaction: (
         data: GetTransactionRequest
     ) => Promise<GetTransactionResponse>;
+    getCoinRecordsByNames: (
+        data: GetCoinRecordsByNamesRequest
+    ) => Promise<GetCoinRecordsByNamesResponse>;
     getWalletBalance: (
         data: GetWalletBalanceRequest
     ) => Promise<GetWalletBalanceResponse>;
@@ -242,6 +249,13 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
     async function getTransaction(data: GetTransactionRequest) {
         return await request<GetTransactionResponse>(
             ChiaMethod.GetTransaction,
+            data
+        );
+    }
+
+    async function getCoinRecordsByNames(data: GetCoinRecordsByNamesRequest) {
+        return await request<GetCoinRecordsByNamesResponse>(
+            ChiaMethod.GetCoinRecordsByNames,
             data
         );
     }
@@ -454,6 +468,7 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
                 logIn,
                 getWallets,
                 getTransaction,
+                getCoinRecordsByNames,
                 getWalletBalance,
                 getCurrentAddress,
                 sendTransaction,
