@@ -8,6 +8,7 @@ export enum ChiaMethod {
     GetCoinRecordsByNames = 'chia_getCoinRecordsByNames',
     GetWalletBalance = 'chia_getWalletBalance',
     GetCurrentAddress = 'chia_getCurrentAddress',
+    RegisterRemoteCoins = 'chia_registerRemoteCoins',
     SendTransaction = 'chia_sendTransaction',
     SignMessageById = 'chia_signMessageById',
     SignMessageByAddress = 'chia_signMessageByAddress',

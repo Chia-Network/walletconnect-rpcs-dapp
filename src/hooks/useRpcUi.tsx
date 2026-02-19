@@ -54,6 +54,7 @@ export function useRpcUi() {
     const [transactionId, setTransactionId] = useState('');
     const [coinId, setCoinId] = useState('');
     const [coinNames, setCoinNames] = useState('');
+    const [coinIds, setCoinIds] = useState('');
     const [startHeight, setStartHeight] = useState<number>(NaN);
     const [endHeight, setEndHeight] = useState<number>(NaN);
     const [includeSpentCoins, setIncludeSpentCoins] = useState(true);
@@ -148,6 +149,18 @@ export function useRpcUi() {
             submitButton('Get Current Address', () =>
                 rpc.getCurrentAddress({ walletId })
             ),
+        ],
+        chia_registerRemoteCoins: [
+            numberOption('Wallet Id', walletId, setWalletId),
+            stringOption('Coin Ids', coinIds, setCoinIds),
+            submitButton('Register Remote Coins', () => {
+                const parsedCoinIds = parseStringArrayInput(coinIds);
+
+                return rpc.registerRemoteCoins({
+                    wallet_id: walletId,
+                    coin_ids: parsedCoinIds,
+                });
+            }),
         ],
         chia_sendTransaction: [
             numberOption('Wallet Id', walletId, setWalletId),
