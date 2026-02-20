@@ -13,6 +13,10 @@ import {
     CheckOfferValidityResponse,
 } from '../types/rpc/CheckOfferValidity';
 import {
+    CreateNewRemoteWalletRequest,
+    CreateNewRemoteWalletResponse,
+} from '../types/rpc/CreateNewRemoteWallet';
+import {
     CreateNewCatWalletRequest,
     CreateNewCatWalletResponse,
 } from '../types/rpc/CreateNewCatWallet';
@@ -145,6 +149,9 @@ interface JsonRpc {
     registerRemoteCoins: (
         data: RegisterRemoteCoinsRequest
     ) => Promise<RegisterRemoteCoinsResponse>;
+    createNewRemoteWallet: (
+        data: CreateNewRemoteWalletRequest
+    ) => Promise<CreateNewRemoteWalletResponse>;
     sendTransaction: (
         data: SendTransactionRequest
     ) => Promise<SendTransactionResponse>;
@@ -284,6 +291,13 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
     async function registerRemoteCoins(data: RegisterRemoteCoinsRequest) {
         return await request<RegisterRemoteCoinsResponse>(
             ChiaMethod.RegisterRemoteCoins,
+            data
+        );
+    }
+
+    async function createNewRemoteWallet(data: CreateNewRemoteWalletRequest) {
+        return await request<CreateNewRemoteWalletResponse>(
+            ChiaMethod.CreateNewRemoteWallet,
             data
         );
     }
@@ -486,6 +500,7 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
                 getWalletBalance,
                 getCurrentAddress,
                 registerRemoteCoins,
+                createNewRemoteWallet,
                 sendTransaction,
                 signMessageById,
                 signMessageByAddress,

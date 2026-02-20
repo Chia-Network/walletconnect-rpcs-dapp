@@ -150,6 +150,11 @@ export function useRpcUi() {
                 rpc.getCurrentAddress({ walletId })
             ),
         ],
+        chia_createNewRemoteWallet: [
+            submitButton('Create new Remote Wallet', () =>
+                rpc.createNewRemoteWallet({})
+            ),
+        ],
         chia_registerRemoteCoins: [
             numberOption('Wallet Id', walletId, setWalletId),
             stringOption('Coin Ids', coinIds, setCoinIds),
