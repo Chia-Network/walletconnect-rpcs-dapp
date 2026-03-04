@@ -162,8 +162,8 @@ export function useRpcUi() {
                 const parsedCoinIds = parseStringArrayInput(coinIds);
 
                 return rpc.registerRemoteCoins({
-                    wallet_id: walletId,
-                    coin_ids: parsedCoinIds,
+                    walletId: walletId,
+                    coinIds: parsedCoinIds,
                 });
             }),
         ],
@@ -233,6 +233,9 @@ export function useRpcUi() {
         ],
         chia_getSyncStatus: [
             submitButton('Get Sync Status', () => rpc.getSyncStatus({})),
+        ],
+        chia_getHeightInfo: [
+            submitButton('Get Height Info', () => rpc.getHeightInfo({})),
         ],
         chia_getWalletAddresses: [
             stringOption('Fingerprints', fingerprints, setFingerprints),

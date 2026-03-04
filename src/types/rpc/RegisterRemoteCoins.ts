@@ -1,6 +1,6 @@
 export interface RegisterRemoteCoinsRequest {
-    wallet_id: number; // uint32
-    coin_ids: string[]; // list[bytes32]
+    walletId: number; // uint32
+    coinIds: string[]; // list[bytes32]
 }
 
 export interface RegisterRemoteCoinsResponse {

@@ -16,6 +16,7 @@ export enum ChiaMethod {
     VerifySignature = 'chia_verifySignature',
     GetNextAddress = 'chia_getNextAddress',
     GetSyncStatus = 'chia_getSyncStatus',
+    GetHeightInfo = 'chia_getHeightInfo',
     GetAllOffers = 'chia_getAllOffers',
     GetOffersCount = 'chia_getOffersCount',
     CreateOfferForIds = 'chia_createOfferForIds',

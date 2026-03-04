@@ -7,7 +7,7 @@ interface WalletConnectState {
     client?: Client;
     session?: SessionTypes.Struct;
     chainId: string;
-    fingerprint?: string;
+    fingerprint?: number;
     connect: () => Promise<void>;
     disconnect: () => Promise<void>;
     isInitializing: boolean;
@@ -33,7 +33,7 @@ export function WalletConnectProvider({
 }) {
     const [client, setClient] = useState<Client>();
     const [session, setSession] = useState<SessionTypes.Struct>();
-    const [fingerprint, setFingerprint] = useState<string>();
+    const [fingerprint, setFingerprint] = useState<number>();
     const [isInitializing, setIsInitializing] = useState(false);
     const [accounts, setAccounts] = useState<string[]>([]);
     const [pairings, setPairings] = useState<PairingTypes.Struct[]>([]);
@@ -55,8 +55,9 @@ export function WalletConnectProvider({
         setSession(session);
         setAccounts(allNamespaceAccounts);
         if (allNamespaceAccounts.length > 0) {
-            const fingerprint = allNamespaceAccounts[0].split(':')[2];
-            setFingerprint(fingerprint);
+            const fingerprintStr = allNamespaceAccounts[0].split(':')[2];
+            const fingerprint = Number(fingerprintStr);
+            setFingerprint(Number.isFinite(fingerprint) ? fingerprint : undefined);
         }
     }, []);
 

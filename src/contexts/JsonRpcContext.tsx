@@ -125,6 +125,10 @@ import {
     RegisterRemoteCoinsRequest,
     RegisterRemoteCoinsResponse,
 } from '../types/rpc/RegisterRemoteCoins';
+import {
+    GetHeightInfoRequest,
+    GetHeightInfoResponse,
+} from '../types/rpc/GetHeightInfo';
 import { useWalletConnect } from './WalletConnectContext';
 
 interface JsonRpc {
@@ -167,6 +171,9 @@ interface JsonRpc {
     getSyncStatus: (
         data: GetSyncStatusRequest
     ) => Promise<GetSyncStatusResponse>;
+    getHeightInfo: (
+        data: GetHeightInfoRequest
+    ) => Promise<GetHeightInfoResponse>;
     getWalletAddresses: (
         data: GetWalletAddressesRequest
     ) => Promise<GetWalletAddressesResponse>;
@@ -235,7 +242,7 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
     async function request<T>(method: ChiaMethod, data: any): Promise<T> {
         if (!client) throw new Error('WalletConnect is not initialized');
         if (!session) throw new Error('Session is not connected');
-        if (!fingerprint) throw new Error('Fingerprint is not loaded.');
+        if (fingerprint === undefined) throw new Error('Fingerprint is not loaded.');
 
         const result = await client!.request<{ data: T } | { error: any }>({
             topic: session!.topic,
@@ -340,6 +347,13 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
     async function getSyncStatus(data: GetSyncStatusRequest) {
         return await request<GetSyncStatusResponse>(
             ChiaMethod.GetSyncStatus,
+            data
+        );
+    }
+
+    async function getHeightInfo(data: GetHeightInfoRequest) {
+        return await request<GetHeightInfoResponse>(
+            ChiaMethod.GetHeightInfo,
             data
         );
     }
@@ -507,6 +521,7 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
                 verifySignature,
                 getNextAddress,
                 getSyncStatus,
+                getHeightInfo,
                 getWalletAddresses,
 
                 // Offers
