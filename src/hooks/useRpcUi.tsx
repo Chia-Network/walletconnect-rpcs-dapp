@@ -54,6 +54,7 @@ export function useRpcUi() {
     const [transactionId, setTransactionId] = useState('');
     const [coinId, setCoinId] = useState('');
     const [coinNames, setCoinNames] = useState('');
+    const [coinIds, setCoinIds] = useState('');
     const [startHeight, setStartHeight] = useState<number>(NaN);
     const [endHeight, setEndHeight] = useState<number>(NaN);
     const [includeSpentCoins, setIncludeSpentCoins] = useState(true);
@@ -149,6 +150,23 @@ export function useRpcUi() {
                 rpc.getCurrentAddress({ walletId })
             ),
         ],
+        chia_createNewRemoteWallet: [
+            submitButton('Create new Remote Wallet', () =>
+                rpc.createNewRemoteWallet({})
+            ),
+        ],
+        chia_registerRemoteCoins: [
+            numberOption('Wallet Id', walletId, setWalletId),
+            stringOption('Coin Ids', coinIds, setCoinIds),
+            submitButton('Register Remote Coins', () => {
+                const parsedCoinIds = parseStringArrayInput(coinIds);
+
+                return rpc.registerRemoteCoins({
+                    walletId: walletId,
+                    coinIds: parsedCoinIds,
+                });
+            }),
+        ],
         chia_sendTransaction: [
             numberOption('Wallet Id', walletId, setWalletId),
             numberOption('Amount', amount, setAmount),
@@ -215,6 +233,9 @@ export function useRpcUi() {
         ],
         chia_getSyncStatus: [
             submitButton('Get Sync Status', () => rpc.getSyncStatus({})),
+        ],
+        chia_getHeightInfo: [
+            submitButton('Get Height Info', () => rpc.getHeightInfo({})),
         ],
         chia_getWalletAddresses: [
             stringOption('Fingerprints', fingerprints, setFingerprints),

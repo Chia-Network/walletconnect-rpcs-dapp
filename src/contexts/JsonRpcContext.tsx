@@ -13,6 +13,10 @@ import {
     CheckOfferValidityResponse,
 } from '../types/rpc/CheckOfferValidity';
 import {
+    CreateNewRemoteWalletRequest,
+    CreateNewRemoteWalletResponse,
+} from '../types/rpc/CreateNewRemoteWallet';
+import {
     CreateNewCatWalletRequest,
     CreateNewCatWalletResponse,
 } from '../types/rpc/CreateNewCatWallet';
@@ -117,6 +121,14 @@ import {
     GetWalletAddressesRequest,
     GetWalletAddressesResponse,
 } from '../types/rpc/GetWalletAddresses';
+import {
+    RegisterRemoteCoinsRequest,
+    RegisterRemoteCoinsResponse,
+} from '../types/rpc/RegisterRemoteCoins';
+import {
+    GetHeightInfoRequest,
+    GetHeightInfoResponse,
+} from '../types/rpc/GetHeightInfo';
 import { useWalletConnect } from './WalletConnectContext';
 
 interface JsonRpc {
@@ -138,6 +150,12 @@ interface JsonRpc {
     getCurrentAddress: (
         data: GetCurrentAddressRequest
     ) => Promise<GetCurrentAddressResponse>;
+    registerRemoteCoins: (
+        data: RegisterRemoteCoinsRequest
+    ) => Promise<RegisterRemoteCoinsResponse>;
+    createNewRemoteWallet: (
+        data: CreateNewRemoteWalletRequest
+    ) => Promise<CreateNewRemoteWalletResponse>;
     sendTransaction: (
         data: SendTransactionRequest
     ) => Promise<SendTransactionResponse>;
@@ -153,6 +171,9 @@ interface JsonRpc {
     getSyncStatus: (
         data: GetSyncStatusRequest
     ) => Promise<GetSyncStatusResponse>;
+    getHeightInfo: (
+        data: GetHeightInfoRequest
+    ) => Promise<GetHeightInfoResponse>;
     getWalletAddresses: (
         data: GetWalletAddressesRequest
     ) => Promise<GetWalletAddressesResponse>;
@@ -221,7 +242,7 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
     async function request<T>(method: ChiaMethod, data: any): Promise<T> {
         if (!client) throw new Error('WalletConnect is not initialized');
         if (!session) throw new Error('Session is not connected');
-        if (!fingerprint) throw new Error('Fingerprint is not loaded.');
+        if (fingerprint === undefined) throw new Error('Fingerprint is not loaded.');
 
         const result = await client!.request<{ data: T } | { error: any }>({
             topic: session!.topic,
@@ -274,6 +295,20 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
         );
     }
 
+    async function registerRemoteCoins(data: RegisterRemoteCoinsRequest) {
+        return await request<RegisterRemoteCoinsResponse>(
+            ChiaMethod.RegisterRemoteCoins,
+            data
+        );
+    }
+
+    async function createNewRemoteWallet(data: CreateNewRemoteWalletRequest) {
+        return await request<CreateNewRemoteWalletResponse>(
+            ChiaMethod.CreateNewRemoteWallet,
+            data
+        );
+    }
+
     async function sendTransaction(data: SendTransactionRequest) {
         return await request<SendTransactionResponse>(
             ChiaMethod.SendTransaction,
@@ -312,6 +347,13 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
     async function getSyncStatus(data: GetSyncStatusRequest) {
         return await request<GetSyncStatusResponse>(
             ChiaMethod.GetSyncStatus,
+            data
+        );
+    }
+
+    async function getHeightInfo(data: GetHeightInfoRequest) {
+        return await request<GetHeightInfoResponse>(
+            ChiaMethod.GetHeightInfo,
             data
         );
     }
@@ -471,12 +513,15 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
                 getCoinRecordsByNames,
                 getWalletBalance,
                 getCurrentAddress,
+                registerRemoteCoins,
+                createNewRemoteWallet,
                 sendTransaction,
                 signMessageById,
                 signMessageByAddress,
                 verifySignature,
                 getNextAddress,
                 getSyncStatus,
+                getHeightInfo,
                 getWalletAddresses,
 
                 // Offers
