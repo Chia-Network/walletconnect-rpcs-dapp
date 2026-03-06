@@ -252,6 +252,10 @@ export function useRpcUi() {
             ),
         ],
 
+        chia_getFeeEstimate: [
+            submitButton('Get Fee Estimate', () => rpc.getFeeEstimate({})),
+        ],
+
         // Offers
         chia_getAllOffers: [
             numberOption('Start Index', startIndex, setStartIndex),
