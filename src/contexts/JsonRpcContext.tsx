@@ -133,6 +133,14 @@ import {
     GetFeeEstimateRequest,
     GetFeeEstimateResponse,
 } from '../types/rpc/GetFeeEstimate';
+import {
+    SelectCoinsRequest,
+    SelectCoinsResponse,
+} from '../types/rpc/SelectCoins';
+import {
+    GetSpendableCoinsRequest,
+    GetSpendableCoinsResponse,
+} from '../types/rpc/GetSpendableCoins';
 import { useWalletConnect } from './WalletConnectContext';
 
 interface JsonRpc {
@@ -184,6 +192,12 @@ interface JsonRpc {
     getFeeEstimate: (
         data: GetFeeEstimateRequest
     ) => Promise<GetFeeEstimateResponse>;
+    selectCoins: (
+        data: SelectCoinsRequest
+    ) => Promise<SelectCoinsResponse>;
+    getSpendableCoins: (
+        data: GetSpendableCoinsRequest
+    ) => Promise<GetSpendableCoinsResponse>;
 
     // Offers
     getAllOffers: (data: GetAllOffersRequest) => Promise<GetAllOffersResponse>;
@@ -379,6 +393,20 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
         );
     }
 
+    async function selectCoins(data: SelectCoinsRequest) {
+        return await request<SelectCoinsResponse>(
+            ChiaMethod.SelectCoins,
+            data
+        );
+    }
+
+    async function getSpendableCoins(data: GetSpendableCoinsRequest) {
+        return await request<GetSpendableCoinsResponse>(
+            ChiaMethod.GetSpendableCoins,
+            data
+        );
+    }
+
     // Offers
 
     async function getAllOffers(data: GetAllOffersRequest) {
@@ -538,6 +566,8 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
                 getHeightInfo,
                 getWalletAddresses,
                 getFeeEstimate,
+                selectCoins,
+                getSpendableCoins,
 
                 // Offers
                 getAllOffers,

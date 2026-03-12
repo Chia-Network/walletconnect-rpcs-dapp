@@ -42,6 +42,8 @@ export enum ChiaMethod {
     GetNftWalletsWithDids = 'chia_getNFTWalletsWithDIDs',
     GetWalletAddresses = 'chia_getWalletAddresses',
     GetFeeEstimate = 'chia_getFeeEstimate',
+    SelectCoins = 'chia_selectCoins',
+    GetSpendableCoins = 'chia_getSpendableCoins',
 }
 
 export const REQUIRED_NAMESPACES: ProposalTypes.RequiredNamespaces = {

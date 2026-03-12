@@ -66,6 +66,11 @@ export function useRpcUi() {
     const [walletIds, setWalletIds] = useState('');
     const [backupDids, setBackupDids] = useState('');
     const [memos, setMemos] = useState('');
+    const [extraConditions, setExtraConditions] = useState('');
+    const [minCoinAmount, setMinCoinAmount] = useState<number>(NaN);
+    const [maxCoinAmount, setMaxCoinAmount] = useState<number>(NaN);
+    const [excludedCoinAmounts, setExcludedCoinAmounts] = useState('');
+    const [excludedCoinIds, setExcludedCoinIds] = useState('');
 
     const [includeData, setIncludeData] = useState(false);
     const [newAddress, setNewAddress] = useState(false);
@@ -255,6 +260,48 @@ export function useRpcUi() {
         chia_getFeeEstimate: [
             submitButton('Get Fee Estimate', () => rpc.getFeeEstimate({})),
         ],
+        chia_selectCoins: [
+            numberOption('Wallet Id', walletId, setWalletId),
+            numberOption('Amount', amount, setAmount),
+            numberOption('Min Coin Amount', minCoinAmount, setMinCoinAmount),
+            numberOption('Max Coin Amount', maxCoinAmount, setMaxCoinAmount),
+            stringOption('Excluded Coin Amounts', excludedCoinAmounts, setExcludedCoinAmounts),
+            stringOption('Excluded Coin IDs', excludedCoinIds, setExcludedCoinIds),
+            submitButton('Select Coins', () =>
+                rpc.selectCoins({
+                    walletId,
+                    amount,
+                    minCoinAmount: isNaN(minCoinAmount) ? undefined : minCoinAmount,
+                    maxCoinAmount: isNaN(maxCoinAmount) ? undefined : maxCoinAmount,
+                    excludedCoinAmounts: excludedCoinAmounts.trim().length
+                        ? excludedCoinAmounts.split(',').map((v) => +v.trim())
+                        : undefined,
+                    excludedCoinIds: excludedCoinIds.trim().length
+                        ? excludedCoinIds.split(',').map((v) => v.trim())
+                        : undefined,
+                })
+            ),
+        ],
+        chia_getSpendableCoins: [
+            numberOption('Wallet Id', walletId, setWalletId),
+            numberOption('Min Coin Amount', minCoinAmount, setMinCoinAmount),
+            numberOption('Max Coin Amount', maxCoinAmount, setMaxCoinAmount),
+            stringOption('Excluded Coin Amounts', excludedCoinAmounts, setExcludedCoinAmounts),
+            stringOption('Excluded Coin IDs', excludedCoinIds, setExcludedCoinIds),
+            submitButton('Get Spendable Coins', () =>
+                rpc.getSpendableCoins({
+                    walletId,
+                    minCoinAmount: isNaN(minCoinAmount) ? undefined : minCoinAmount,
+                    maxCoinAmount: isNaN(maxCoinAmount) ? undefined : maxCoinAmount,
+                    excludedCoinAmounts: excludedCoinAmounts.trim().length
+                        ? excludedCoinAmounts.split(',').map((v) => +v.trim())
+                        : undefined,
+                    excludedCoinIds: excludedCoinIds.trim().length
+                        ? excludedCoinIds.split(',').map((v) => v.trim())
+                        : undefined,
+                })
+            ),
+        ],
 
         // Offers
         chia_getAllOffers: [
@@ -295,12 +342,16 @@ export function useRpcUi() {
                 setDisableJsonFormatting
             ),
             booleanOption('Validate Only', validateOnly, setValidateOnly),
+            stringOption('Extra Conditions', extraConditions, setExtraConditions),
             submitButton('Create Offer For Ids', () =>
                 rpc.createOfferForIds({
                     disableJSONFormatting: disableJsonFormatting,
                     validateOnly,
                     offer: JSON.parse(offer || '{}'),
                     driverDict: JSON.parse(driverDict || '{}'),
+                    extraConditions: extraConditions.trim().length
+                        ? JSON.parse(extraConditions)
+                        : undefined,
                 })
             ),
         ],
@@ -325,8 +376,15 @@ export function useRpcUi() {
         chia_takeOffer: [
             numberOption('Fee', fee, setFee),
             stringOption('Offer Data', offerData, setOfferData),
+            stringOption('Extra Conditions', extraConditions, setExtraConditions),
             submitButton('Take Offer', () =>
-                rpc.takeOffer({ fee, offer: offerData })
+                rpc.takeOffer({
+                    fee,
+                    offer: offerData,
+                    extraConditions: extraConditions.trim().length
+                        ? JSON.parse(extraConditions)
+                        : undefined,
+                })
             ),
         ],
         chia_getOfferSummary: [

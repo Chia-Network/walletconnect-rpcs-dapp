@@ -5,6 +5,7 @@ export interface CreateOfferForIdsRequest {
     driverDict: any;
     validateOnly?: boolean;
     disableJSONFormatting?: boolean;
+    extraConditions?: any[];
 }
 
 export interface CreateOfferForIdsResponse {
