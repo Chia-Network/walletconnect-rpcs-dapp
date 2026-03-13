@@ -343,6 +343,7 @@ export function useRpcUi() {
             ),
             booleanOption('Validate Only', validateOnly, setValidateOnly),
             stringOption('Extra Conditions', extraConditions, setExtraConditions),
+            stringOption('Coin IDs', coinIds, setCoinIds),
             submitButton('Create Offer For Ids', () =>
                 rpc.createOfferForIds({
                     disableJSONFormatting: disableJsonFormatting,
@@ -351,6 +352,9 @@ export function useRpcUi() {
                     driverDict: JSON.parse(driverDict || '{}'),
                     extraConditions: extraConditions.trim().length
                         ? JSON.parse(extraConditions)
+                        : undefined,
+                    coinIds: coinIds.trim().length
+                        ? coinIds.split(',').map((v) => v.trim())
                         : undefined,
                 })
             ),

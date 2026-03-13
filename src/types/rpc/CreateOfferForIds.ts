@@ -6,6 +6,7 @@ export interface CreateOfferForIdsRequest {
     validateOnly?: boolean;
     disableJSONFormatting?: boolean;
     extraConditions?: any[];
+    coinIds?: string[];
 }
 
 export interface CreateOfferForIdsResponse {
