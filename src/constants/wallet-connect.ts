@@ -44,6 +44,7 @@ export enum ChiaMethod {
     GetFeeEstimate = 'chia_getFeeEstimate',
     SelectCoins = 'chia_selectCoins',
     GetSpendableCoins = 'chia_getSpendableCoins',
+    WalletPushTx = 'chia_walletPushTx',
 }
 
 export const REQUIRED_NAMESPACES: ProposalTypes.RequiredNamespaces = {

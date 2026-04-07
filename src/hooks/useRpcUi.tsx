@@ -71,6 +71,7 @@ export function useRpcUi() {
     const [maxCoinAmount, setMaxCoinAmount] = useState<number>(NaN);
     const [excludedCoinAmounts, setExcludedCoinAmounts] = useState('');
     const [excludedCoinIds, setExcludedCoinIds] = useState('');
+    const [spendBundle, setSpendBundle] = useState('');
 
     const [includeData, setIncludeData] = useState(false);
     const [newAddress, setNewAddress] = useState(false);
@@ -299,6 +300,16 @@ export function useRpcUi() {
                     excludedCoinIds: excludedCoinIds.trim().length
                         ? excludedCoinIds.split(',').map((v) => v.trim())
                         : undefined,
+                })
+            ),
+        ],
+        chia_walletPushTx: [
+            stringOption('Spend Bundle', spendBundle, setSpendBundle),
+            numberOption('Fee', fee, setFee),
+            submitButton('Push Transaction', () =>
+                rpc.walletPushTx({
+                    spendBundle: JSON.parse(spendBundle),
+                    fee: fee || undefined,
                 })
             ),
         ],

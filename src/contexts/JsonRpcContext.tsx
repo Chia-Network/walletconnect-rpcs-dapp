@@ -141,6 +141,10 @@ import {
     GetSpendableCoinsRequest,
     GetSpendableCoinsResponse,
 } from '../types/rpc/GetSpendableCoins';
+import {
+    WalletPushTxRequest,
+    WalletPushTxResponse,
+} from '../types/rpc/WalletPushTx';
 import { useWalletConnect } from './WalletConnectContext';
 
 interface JsonRpc {
@@ -198,6 +202,9 @@ interface JsonRpc {
     getSpendableCoins: (
         data: GetSpendableCoinsRequest
     ) => Promise<GetSpendableCoinsResponse>;
+    walletPushTx: (
+        data: WalletPushTxRequest
+    ) => Promise<WalletPushTxResponse>;
 
     // Offers
     getAllOffers: (data: GetAllOffersRequest) => Promise<GetAllOffersResponse>;
@@ -407,6 +414,13 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
         );
     }
 
+    async function walletPushTx(data: WalletPushTxRequest) {
+        return await request<WalletPushTxResponse>(
+            ChiaMethod.WalletPushTx,
+            data
+        );
+    }
+
     // Offers
 
     async function getAllOffers(data: GetAllOffersRequest) {
@@ -568,6 +582,7 @@ export function JsonRpcProvider({ children }: PropsWithChildren) {
                 getFeeEstimate,
                 selectCoins,
                 getSpendableCoins,
+                walletPushTx,
 
                 // Offers
                 getAllOffers,
