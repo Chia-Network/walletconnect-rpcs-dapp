@@ -4,7 +4,7 @@ export interface TransferNftRequest {
     walletId: number;
     nftCoinIds: string[];
     targetAddress: string;
-    fee: number;
+    fee: string;
 }
 
 export interface TransferNftResponse {

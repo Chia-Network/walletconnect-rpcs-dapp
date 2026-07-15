@@ -1,7 +1,7 @@
 export interface CancelOfferRequest {
     tradeId: string;
     secure: boolean;
-    fee: number;
+    fee: string;
 }
 
 export interface CancelOfferResponse {
