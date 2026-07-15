@@ -18,12 +18,14 @@
         "@types/qrcode": "^1.5.5",
         "@walletconnect/sign-client": "^2.10.0",
         "@walletconnect/utils": "^2.10.0",
+        "json-bigint": "^1.0.0",
         "qrcode": "^1.5.4",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-syntax-highlighter": "^16.1.0"
     },
     "devDependencies": {
+        "@types/json-bigint": "^1.0.4",
         "@types/react": "^18.3.24",
         "@types/react-dom": "^18.3.7",
         "@types/react-syntax-highlighter": "^15.5.6",

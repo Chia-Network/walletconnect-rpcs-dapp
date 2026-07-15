@@ -2,7 +2,7 @@ import { TradeRecord } from '../TradeRecord';
 
 export interface TakeOfferRequest {
     offer: string;
-    fee: number;
+    fee: string;
 }
 
 export interface TakeOfferResponse {
