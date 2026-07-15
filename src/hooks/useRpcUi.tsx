@@ -7,6 +7,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { useJsonRpc } from '../contexts/JsonRpcContext';
+import { jsonParseSafeIntegers } from '../utils/jsonSafe';
 
 export function useRpcUi() {
     const rpc = useJsonRpc();
@@ -299,8 +300,8 @@ export function useRpcUi() {
                 rpc.createOfferForIds({
                     disableJSONFormatting: disableJsonFormatting,
                     validateOnly,
-                    offer: JSON.parse(offer || '{}'),
-                    driverDict: JSON.parse(driverDict || '{}'),
+                    offer: jsonParseSafeIntegers(offer || '{}'),
+                    driverDict: jsonParseSafeIntegers(driverDict || '{}'),
                 })
             ),
         ],
