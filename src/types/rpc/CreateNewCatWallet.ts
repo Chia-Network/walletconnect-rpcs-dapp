@@ -1,8 +1,8 @@
 import { WalletType } from '../WalletType';
 
 export interface CreateNewCatWalletRequest {
-    amount: number;
-    fee: number;
+    amount: string;
+    fee: string;
 }
 
 export interface CreateNewCatWalletResponse {

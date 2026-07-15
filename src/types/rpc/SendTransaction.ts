@@ -1,8 +1,8 @@
 import { TransactionRecord } from '../TransactionRecord';
 
 export interface SendTransactionRequest {
-    amount: number;
-    fee: number;
+    amount: string;
+    fee: string;
     address: string;
     walletId?: number;
     waitForConfirmation?: boolean;

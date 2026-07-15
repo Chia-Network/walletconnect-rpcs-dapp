@@ -3,8 +3,8 @@ import { TransactionRecord } from '../TransactionRecord';
 export interface SpendCatRequest {
     walletId: number;
     address: string;
-    amount: number;
-    fee: number;
+    amount: string;
+    fee: string;
     memos?: string[];
     waitForConfirmation?: boolean;
 }

@@ -1,8 +1,8 @@
 import { WalletType } from '../WalletType';
 
 export interface CreateNewDidWalletRequest {
-    amount: number;
-    fee: number;
+    amount: string;
+    fee: string;
     backupDids: string[];
     numOfBackupIdsNeeded: number;
 }

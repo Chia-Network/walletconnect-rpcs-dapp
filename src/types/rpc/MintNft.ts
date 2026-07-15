@@ -14,7 +14,7 @@ export interface MintNftRequest {
     editionNumber: number,
     editionCount: number,
     didId: string,
-    fee: number,
+    fee: string,
 }
 
 export type MintNftResponse = NftInfo;

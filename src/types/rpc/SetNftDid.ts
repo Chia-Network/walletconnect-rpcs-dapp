@@ -5,7 +5,7 @@ export interface SetNftDidRequest {
     nftLauncherId: string;
     nftCoinIds: string[];
     did: string;
-    fee: number;
+    fee: string;
 }
 
 export interface SetNftDidResponse {

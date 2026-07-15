@@ -5,8 +5,12 @@ import {
     FormGroup,
     TextField,
 } from '@mui/material';
+import JSONbig from 'json-bigint';
 import { useState } from 'react';
 import { useJsonRpc } from '../contexts/JsonRpcContext';
+
+// Integers outside ±(2^53-1) are stored as strings so precision isn't lost.
+const jsonParseSafeIntegers = JSONbig({ storeAsString: true }).parse;
 
 export function useRpcUi() {
     const rpc = useJsonRpc();
@@ -15,9 +19,10 @@ export function useRpcUi() {
 
     const [fingerprint, setFingerprint] = useState(0);
     const [fingerprints, setFingerprints] = useState<string>('');
-    const [amount, setAmount] = useState(0);
+    // Keep as strings so mojo values above 2^53-1 aren't coerced/rounded.
+    const [amount, setAmount] = useState('0');
     const [count, setCount] = useState(1);
-    const [fee, setFee] = useState(0);
+    const [fee, setFee] = useState('0');
     const [number, setNumber] = useState(50);
     const [index, setIndex] = useState(0);
     const [startIndex, setStartIndex] = useState(0);
@@ -169,8 +174,8 @@ export function useRpcUi() {
         ],
         chia_sendTransaction: [
             numberOption('Wallet Id', walletId, setWalletId),
-            numberOption('Amount', amount, setAmount),
-            numberOption('Fee', fee, setFee),
+            stringOption('Amount', amount, setAmount),
+            stringOption('Fee', fee, setFee),
             stringOption('Address', address, setAddress),
             stringOption('Memos', memos, setMemos),
             booleanOption(
@@ -299,13 +304,13 @@ export function useRpcUi() {
                 rpc.createOfferForIds({
                     disableJSONFormatting: disableJsonFormatting,
                     validateOnly,
-                    offer: JSON.parse(offer || '{}'),
-                    driverDict: JSON.parse(driverDict || '{}'),
+                    offer: jsonParseSafeIntegers(offer || '{}'),
+                    driverDict: jsonParseSafeIntegers(driverDict || '{}'),
                 })
             ),
         ],
         chia_cancelOffer: [
-            numberOption('Fee', fee, setFee),
+            stringOption('Fee', fee, setFee),
             stringOption('Trade Id', tradeId, setTradeId),
             booleanOption('Secure', secure, setSecure),
             submitButton('Cancel Offer', () =>
@@ -323,7 +328,7 @@ export function useRpcUi() {
             ),
         ],
         chia_takeOffer: [
-            numberOption('Fee', fee, setFee),
+            stringOption('Fee', fee, setFee),
             stringOption('Offer Data', offerData, setOfferData),
             submitButton('Take Offer', () =>
                 rpc.takeOffer({ fee, offer: offerData })
@@ -348,8 +353,8 @@ export function useRpcUi() {
 
         // CATs
         chia_createNewCATWallet: [
-            numberOption('Amount', amount, setAmount),
-            numberOption('Fee', fee, setFee),
+            stringOption('Amount', amount, setAmount),
+            stringOption('Fee', fee, setFee),
             submitButton('Create New CAT Wallet', () =>
                 rpc.createNewCatWallet({ amount, fee })
             ),
@@ -369,8 +374,8 @@ export function useRpcUi() {
         chia_spendCAT: [
             numberOption('Wallet Id', walletId, setWalletId),
             stringOption('Address', address, setAddress),
-            numberOption('Amount', amount, setAmount),
-            numberOption('Fee', fee, setFee),
+            stringOption('Amount', amount, setAmount),
+            stringOption('Fee', fee, setFee),
             booleanOption(
                 'Wait For Confirmation',
                 waitForConfirmation,
@@ -428,7 +433,7 @@ export function useRpcUi() {
             numberOption('Edition Number', editionNumber, setEditionNumber),
             numberOption('Edition Count', editionCount, setEditionCount),
             stringOption('DID ID', didId, setDidId),
-            numberOption('Fee', fee, setFee),
+            stringOption('Fee', fee, setFee),
             submitButton('Mint NFT', () =>
                 rpc.mintNft({
                     walletId,
@@ -458,7 +463,7 @@ export function useRpcUi() {
             numberOption('Wallet Id', walletId, setWalletId),
             stringOption('NFT Coin Ids', nftCoinIds, setNftCoinIds),
             stringOption('Address', address, setAddress),
-            numberOption('Fee', fee, setFee),
+            stringOption('Fee', fee, setFee),
             submitButton('Transfer NFT', () =>
                 rpc.transferNft({
                     walletId,
@@ -483,8 +488,8 @@ export function useRpcUi() {
 
         // DIDs
         chia_createNewDIDWallet: [
-            numberOption('Amount', amount, setAmount),
-            numberOption('Fee', fee, setFee),
+            stringOption('Amount', amount, setAmount),
+            stringOption('Fee', fee, setFee),
             numberOption(
                 'Number of Backup Dids Needed',
                 backupDidsNeeded,
@@ -514,7 +519,7 @@ export function useRpcUi() {
             stringOption('NFT Coin Ids', nftCoinIds, setNftCoinIds),
             stringOption('Launcher Id', launcherId, setLauncherId),
             stringOption('DID', did, setDid),
-            numberOption('Fee', fee, setFee),
+            stringOption('Fee', fee, setFee),
             submitButton('Set NFT DID', () =>
                 rpc.setNftDid({
                     walletId,
